@@ -37,15 +37,17 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jPanelBotoeira" max="32767" attributes="0"/>
-                  <Component id="jPanel2" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="jPanel2" max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -54,13 +56,12 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="jPanel2" max="32767" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jPanelBotoeira" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="jPanel3" max="-2" attributes="0"/>
+                  <Component id="jPanel3" max="32767" attributes="0"/>
+                  <Component id="jPanel2" max="32767" attributes="0"/>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jPanelBotoeira" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -83,9 +84,8 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="lblFotoTake" max="32767" attributes="0"/>
                       <Component id="cmdTakePicture" alignment="1" max="32767" attributes="0"/>
-                      <Component id="lblFotoTake" alignment="1" max="32767" attributes="0"/>
-                      <Component id="lblFotoCaminho" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -97,9 +97,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="lblFotoTake" max="32767" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="cmdTakePicture" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="lblFotoCaminho" min="-2" pref="30" max="-2" attributes="0"/>
+                  <Component id="cmdTakePicture" min="-2" pref="58" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -131,11 +129,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmdTakePictureActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="lblFotoCaminho">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-          </Properties>
-        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="jPanel3">
@@ -155,14 +148,15 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jPanelCam" max="32767" attributes="0"/>
-                          <Component id="jPanelFiltro" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jPanelFiltro1" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lblLastFoto" alignment="0" max="32767" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Component id="jPanelCam" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jPanelFiltro" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="lblLastFoto" min="-2" pref="227" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -170,13 +164,12 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jPanelCam" max="32767" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="jPanelFiltro" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jPanelFiltro" max="32767" attributes="0"/>
+                      <Component id="jPanelCam" max="32767" attributes="0"/>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jPanelFiltro1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="lblLastFoto" min="-2" pref="162" max="-2" attributes="0"/>
+                  <Component id="lblLastFoto" min="-2" pref="124" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -211,10 +204,13 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblCamUsada" linkSize="4" min="-2" pref="200" max="-2" attributes="0"/>
-                          <Component id="jSliderCam" linkSize="4" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblCamUsada" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jSliderCam" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="10" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -222,9 +218,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                      <Component id="lblCamUsada" min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="lblCamUsada" min="-2" pref="40" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jSliderCam" min="-2" pref="51" max="-2" attributes="0"/>
+                      <Component id="jSliderCam" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -233,6 +230,7 @@
             <Component class="javax.swing.JSlider" name="jSliderCam">
               <Properties>
                 <Property name="maximum" type="int" value="3"/>
+                <Property name="orientation" type="int" value="1"/>
                 <Property name="paintLabels" type="boolean" value="true"/>
                 <Property name="paintTicks" type="boolean" value="true"/>
                 <Property name="snapToTicks" type="boolean" value="true"/>
@@ -285,13 +283,16 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblNumFiltro" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
-                          <Component id="jSliderFiltro" alignment="0" min="-2" pref="204" max="-2" attributes="0"/>
+                          <Component id="lblNumFiltro" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jSliderFiltro" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="10" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace pref="14" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -299,10 +300,10 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                      <Component id="lblNumFiltro" min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="lblNumFiltro" min="-2" pref="40" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jSliderFiltro" min="-2" pref="24" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="jSliderFiltro" pref="171" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -313,7 +314,8 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="0" green="f0" red="f0" type="rgb"/>
                 </Property>
-                <Property name="maximum" type="int" value="25"/>
+                <Property name="maximum" type="int" value="5"/>
+                <Property name="orientation" type="int" value="1"/>
                 <Property name="paintLabels" type="boolean" value="true"/>
                 <Property name="paintTicks" type="boolean" value="true"/>
                 <Property name="snapToTicks" type="boolean" value="true"/>
@@ -352,88 +354,6 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanelFiltro1">
-          <Properties>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                <LineBorder roundedCorners="true" thickness="4">
-                  <Color PropertyName="color" blue="19" green="19" red="19" type="rgb"/>
-                </LineBorder>
-              </Border>
-            </Property>
-          </Properties>
-
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblNumFiltroOpc" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
-                          <Component id="jSliderFiltroOpc" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="32767" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                      <Component id="lblNumFiltroOpc" min="-2" pref="28" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jSliderFiltroOpc" min="-2" pref="24" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-          </Layout>
-          <SubComponents>
-            <Component class="javax.swing.JSlider" name="jSliderFiltroOpc">
-              <Properties>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="f0" green="0" red="0" type="rgb"/>
-                </Property>
-                <Property name="maximum" type="int" value="25"/>
-                <Property name="minimum" type="int" value="1"/>
-                <Property name="paintLabels" type="boolean" value="true"/>
-                <Property name="paintTicks" type="boolean" value="true"/>
-                <Property name="snapToTicks" type="boolean" value="true"/>
-                <Property name="toolTipText" type="java.lang.String" value="Alterar a Webcam conectada e Ajusta a Tela"/>
-                <Property name="value" type="int" value="1"/>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                    <LineBorder roundedCorners="true" thickness="3">
-                      <Color PropertyName="color" blue="f0" green="0" red="0" type="rgb"/>
-                    </LineBorder>
-                  </Border>
-                </Property>
-                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Cursor Padr&#xe3;o"/>
-                </Property>
-                <Property name="valueIsAdjusting" type="boolean" value="true"/>
-              </Properties>
-              <Events>
-                <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="jSliderFiltroOpcStateChanged"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JLabel" name="lblNumFiltroOpc">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Arial" size="14" style="1"/>
-                </Property>
-                <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
-                    <LineBorder thickness="3">
-                      <Color PropertyName="color" blue="f0" green="0" red="0" type="rgb"/>
-                    </LineBorder>
-                  </Border>
-                </Property>
-              </Properties>
-            </Component>
-          </SubComponents>
-        </Container>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="jPanelBotoeira">
@@ -450,29 +370,46 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="cmdSairTakePicture" pref="81" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
-                  <Component id="cmdAjusteCam" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
-                  <Component id="cmdDelPicture" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="lblFotoCaminho" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="cmdSairTakePicture" pref="124" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="91" max="-2" attributes="0"/>
+                          <Component id="cmdAjusteCam" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="116" max="-2" attributes="0"/>
+                          <Component id="cmdDelPicture" pref="124" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="cmdSairTakePicture" linkSize="3" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
-                      <Component id="cmdAjusteCam" linkSize="3" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="cmdDelPicture" linkSize="3" alignment="3" min="-2" pref="42" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cmdSairTakePicture" linkSize="3" alignment="3" pref="41" max="32767" attributes="0"/>
+                          <Component id="cmdDelPicture" linkSize="3" alignment="3" pref="42" max="32767" attributes="0"/>
+                      </Group>
+                      <Component id="cmdAjusteCam" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="lblFotoCaminho" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
+        <Component class="javax.swing.JLabel" name="lblFotoCaminho">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+          </Properties>
+        </Component>
         <Component class="javax.swing.JButton" name="cmdDelPicture">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
