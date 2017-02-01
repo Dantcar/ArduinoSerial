@@ -4,22 +4,27 @@
  * and open the template in the editor.
  */
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
-import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.UIManager;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -27,13 +32,14 @@ import org.opencv.core.MatOfByte;
 import org.opencv.core.Scalar;
 import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
-import org.opencv.imgproc.Imgproc;
 
 /**
  *
  * @author Décio
  */
 public class TelaTakeFoto extends javax.swing.JFrame {
+
+    private static int FLAG_FILTRO = 0;
 
     private static int SOURCE_CAM = 1;
     private static int FILTER_NUMBER = 1;
@@ -42,34 +48,57 @@ public class TelaTakeFoto extends javax.swing.JFrame {
     private Date dateFilePicture;
     private DaemonThreadCamFoto myThreadCamFoto = null;
 
+    volatile BufferedImage teste;
     private static int DELAY_CAM = 50;
-    private static int openFrameCount = 0; //teste
-    private static final int xOffset = 30, yOffset = 30; //teste
+    // private static int openFrameCount = 0; //teste
+    // private static final int xOffset = 30, yOffset = 30; //teste
 
     int count = 0;
     //VideoCapture webSource = null;
     VideoCapture camFoto = null;
 
     Mat frame = new Mat();
+
     MatOfByte mem = new MatOfByte();
 
     /**
      * Creates new form TelaTakeFoto
      */
     public TelaTakeFoto() {
+
+        UIManager.put("jSliderCam.selectionBackground", Color.black);
+        UIManager.put("jSliderCam.selectionForeground", Color.white);
+        UIManager.put("jSliderCam.foreground", new Color(8, 32, 128));
+
         initComponents();
+
+        Hashtable m_labels = new Hashtable(3);
+        for (int k = 0; k < 4; k++) {
+            m_labels.put(k, new JLabel(
+                    k + "", JLabel.CENTER));
+        }
+        jSliderCam.setLabelTable(m_labels);
+        jSliderCam.setPaintLabels(true);
+        jSliderCam.setMajorTickSpacing(1);
+        jSliderCam.setMinorTickSpacing(1);
+        jSliderCam.setPaintTicks(true);
+
+        jSliderFiltro.setPaintLabels(true);
+        jSliderFiltro.setMajorTickSpacing(5);
+        jSliderFiltro.setMinorTickSpacing(1);
+        jSliderFiltro.setPaintTicks(true);
+
+        jSliderFiltroOpc.setPaintLabels(true);
+        jSliderFiltroOpc.setMajorTickSpacing(2);
+        jSliderFiltroOpc.setMinorTickSpacing(1);
+        jSliderFiltroOpc.setPaintTicks(true);
 
         this.setTitle("Faça sua Fotografia de Cadastro");
         String pathProjeto = System.getProperty("user.dir") + "//";
         String iconPetfast = pathProjeto + "src//Icones//petfastIcone.png";
         setIconImage(Toolkit.getDefaultToolkit().getImage(iconPetfast));
 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension frameSize = getSize();
-
-        setLocation(xOffset * openFrameCount, yOffset * openFrameCount);
-        setLocation(new Point((screenSize.width - frameSize.width) / 2,
-                (screenSize.height - frameSize.width) / 2));
+        center(); //método para centralizar o frame na tela
 
         cmdAjusteCam.setEnabled(false);
         cmdTakePicture.setEnabled(true);
@@ -79,6 +108,24 @@ public class TelaTakeFoto extends javax.swing.JFrame {
         this.repaint();
         iniciarCam();
 
+    }
+
+    /**
+     * Método para centralizar a frame
+     */
+    public void center() {
+        int openFrameCount = 0; //teste
+        int xOffset = 30, yOffset = 30; //teste
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension frameSize = getSize();
+
+        int x = (screenSize.width - frameSize.width) / 2;
+        int y = (screenSize.height - frameSize.height) / 2;
+
+        setLocation(xOffset * openFrameCount, yOffset * openFrameCount);
+        setLocation(new Point((screenSize.width - frameSize.width) / 2,
+                (screenSize.height - frameSize.width) / 2));
+        setLocation(x, y);
     }
 
     /**
@@ -94,6 +141,7 @@ public class TelaTakeFoto extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         lblFotoTake = new javax.swing.JLabel();
         cmdTakePicture = new javax.swing.JButton();
+        lblFotoCaminho = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         lblLastFoto = new javax.swing.JLabel();
         jPanelCam = new javax.swing.JPanel();
@@ -102,8 +150,10 @@ public class TelaTakeFoto extends javax.swing.JFrame {
         jPanelFiltro = new javax.swing.JPanel();
         jSliderFiltro = new javax.swing.JSlider();
         lblNumFiltro = new javax.swing.JLabel();
+        jPanelFiltro1 = new javax.swing.JPanel();
+        jSliderFiltroOpc = new javax.swing.JSlider();
+        lblNumFiltroOpc = new javax.swing.JLabel();
         jPanelBotoeira = new javax.swing.JPanel();
-        lblFotoCaminho = new javax.swing.JLabel();
         cmdDelPicture = new javax.swing.JButton();
         cmdSairTakePicture = new javax.swing.JButton();
         cmdAjusteCam = new javax.swing.JButton();
@@ -135,6 +185,8 @@ public class TelaTakeFoto extends javax.swing.JFrame {
             }
         });
 
+        lblFotoCaminho.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -142,8 +194,9 @@ public class TelaTakeFoto extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblFotoTake, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cmdTakePicture, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(cmdTakePicture, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblFotoTake, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblFotoCaminho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -152,7 +205,9 @@ public class TelaTakeFoto extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lblFotoTake, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cmdTakePicture, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cmdTakePicture)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblFotoCaminho, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -163,7 +218,6 @@ public class TelaTakeFoto extends javax.swing.JFrame {
         jPanelCam.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(25, 25, 25), 4, true));
 
         jSliderCam.setMaximum(3);
-        jSliderCam.setOrientation(javax.swing.JSlider.VERTICAL);
         jSliderCam.setPaintLabels(true);
         jSliderCam.setPaintTicks(true);
         jSliderCam.setSnapToTicks(true);
@@ -189,27 +243,26 @@ public class TelaTakeFoto extends javax.swing.JFrame {
             .addGroup(jPanelCamLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelCamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblCamUsada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanelCamLayout.createSequentialGroup()
-                        .addComponent(jSliderCam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 10, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addComponent(lblCamUsada, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSliderCam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jPanelCamLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jSliderCam, lblCamUsada});
+
         jPanelCamLayout.setVerticalGroup(
             jPanelCamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCamLayout.createSequentialGroup()
                 .addGap(6, 6, 6)
-                .addComponent(lblCamUsada, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblCamUsada, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSliderCam, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addGap(28, 28, 28))
+                .addComponent(jSliderCam, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jPanelFiltro.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(25, 25, 25), 4, true));
 
         jSliderFiltro.setForeground(new java.awt.Color(240, 240, 0));
-        jSliderFiltro.setMaximum(5);
-        jSliderFiltro.setOrientation(javax.swing.JSlider.VERTICAL);
+        jSliderFiltro.setMaximum(25);
         jSliderFiltro.setPaintLabels(true);
         jSliderFiltro.setPaintTicks(true);
         jSliderFiltro.setSnapToTicks(true);
@@ -235,20 +288,62 @@ public class TelaTakeFoto extends javax.swing.JFrame {
             .addGroup(jPanelFiltroLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblNumFiltro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanelFiltroLayout.createSequentialGroup()
-                        .addComponent(jSliderFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 10, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addComponent(lblNumFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSliderFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         jPanelFiltroLayout.setVerticalGroup(
             jPanelFiltroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelFiltroLayout.createSequentialGroup()
                 .addGap(6, 6, 6)
-                .addComponent(lblNumFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblNumFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSliderFiltro, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
-                .addGap(28, 28, 28))
+                .addComponent(jSliderFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanelFiltro1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(25, 25, 25), 4, true));
+
+        jSliderFiltroOpc.setForeground(new java.awt.Color(0, 0, 240));
+        jSliderFiltroOpc.setMaximum(25);
+        jSliderFiltroOpc.setMinimum(1);
+        jSliderFiltroOpc.setPaintLabels(true);
+        jSliderFiltroOpc.setPaintTicks(true);
+        jSliderFiltroOpc.setSnapToTicks(true);
+        jSliderFiltroOpc.setToolTipText("Alterar a Webcam conectada e Ajusta a Tela");
+        jSliderFiltroOpc.setValue(1);
+        jSliderFiltroOpc.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 240), 3, true));
+        jSliderFiltroOpc.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jSliderFiltroOpc.setValueIsAdjusting(true);
+        jSliderFiltroOpc.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSliderFiltroOpcStateChanged(evt);
+            }
+        });
+
+        lblNumFiltroOpc.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lblNumFiltroOpc.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblNumFiltroOpc.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 240), 3));
+
+        javax.swing.GroupLayout jPanelFiltro1Layout = new javax.swing.GroupLayout(jPanelFiltro1);
+        jPanelFiltro1.setLayout(jPanelFiltro1Layout);
+        jPanelFiltro1Layout.setHorizontalGroup(
+            jPanelFiltro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelFiltro1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelFiltro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNumFiltroOpc, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSliderFiltroOpc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanelFiltro1Layout.setVerticalGroup(
+            jPanelFiltro1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelFiltro1Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(lblNumFiltroOpc, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSliderFiltroOpc, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -258,29 +353,28 @@ public class TelaTakeFoto extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblLastFoto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jPanelCam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanelFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jPanelCam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanelFiltro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanelFiltro1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblLastFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanelFiltro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanelCam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanelCam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanelFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblLastFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanelFiltro1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblLastFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         jPanelBotoeira.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
-
-        lblFotoCaminho.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
         cmdDelPicture.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         cmdDelPicture.setText("Apagar");
@@ -313,45 +407,36 @@ public class TelaTakeFoto extends javax.swing.JFrame {
             jPanelBotoeiraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelBotoeiraLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelBotoeiraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelBotoeiraLayout.createSequentialGroup()
-                        .addComponent(lblFotoCaminho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(jPanelBotoeiraLayout.createSequentialGroup()
-                        .addComponent(cmdSairTakePicture, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
-                        .addGap(91, 91, 91)
-                        .addComponent(cmdAjusteCam)
-                        .addGap(116, 116, 116)
-                        .addComponent(cmdDelPicture, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
-                        .addGap(29, 29, 29))))
+                .addComponent(cmdSairTakePicture, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
+                .addGap(61, 61, 61)
+                .addComponent(cmdAjusteCam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(41, 41, 41)
+                .addComponent(cmdDelPicture, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanelBotoeiraLayout.setVerticalGroup(
             jPanelBotoeiraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelBotoeiraLayout.createSequentialGroup()
-                .addGroup(jPanelBotoeiraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanelBotoeiraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(cmdSairTakePicture, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
-                        .addComponent(cmdDelPicture, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE))
-                    .addComponent(cmdAjusteCam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblFotoCaminho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(jPanelBotoeiraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmdSairTakePicture, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmdAjusteCam)
+                    .addComponent(cmdDelPicture, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanelBotoeiraLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmdDelPicture, cmdSairTakePicture});
+        jPanelBotoeiraLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cmdAjusteCam, cmdDelPicture, cmdSairTakePicture});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanelBotoeira, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -359,11 +444,11 @@ public class TelaTakeFoto extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelBotoeira, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanelBotoeira, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         pack();
@@ -400,43 +485,60 @@ public class TelaTakeFoto extends javax.swing.JFrame {
 
     private void cmdTakePictureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdTakePictureActionPerformed
         // TODO add your handling code here:
+        String extensao = "";
 
         cmdDelPicture.setEnabled(true);
 
-        jFileChooserFoto1.addChoosableFileFilter(new TextFilter());
-
+        FileFilter filter = new FileNameExtensionFilter("Arquivos Imagens: png, jpg e gif", "png", "jpg", "gif");
+        JFileChooser jFileChooserFoto1 = new JFileChooser("C:\\Users\\Décio\\Documents\\__POO2016"); //colocar o path do projeto
+        //jFileChooserFoto1.addChoosableFileFilter(new TextFilterOut());
+        jFileChooserFoto1.addChoosableFileFilter(filter);
         int returnVal = jFileChooserFoto1.showSaveDialog(this);
 
         if (returnVal == jFileChooserFoto1.APPROVE_OPTION) {
             File file = jFileChooserFoto1.getSelectedFile();
-
-            Highgui.imwrite(file.getPath(), frame);
-
-            //matfoto = Highgui.imread(file.getAbsolutePath().toString(), 0);
+            String arquivoNome = file.getAbsolutePath();
+            extensao = arquivoNome.substring((arquivoNome.lastIndexOf(".")), arquivoNome.length());
+           
+            
+            try {
+                if (FLAG_FILTRO == 18){
+                   Thread.sleep(DELAY_CAM * 8); 
+                }
+                
+                //Highgui.imwrite(file.getPath(), frame); //grava arquivo imagem mas não tem permissão em c
+                if (extensao.equalsIgnoreCase(".jpg")) {
+                    ImageIO.write(teste, "jpg", file);
+                    Thread.sleep(DELAY_CAM * 10);
+                } else if (extensao.equalsIgnoreCase(".png")) {
+                    ImageIO.write(teste, "png", file);
+                    Thread.sleep(DELAY_CAM * 12);
+                } else if (extensao.equalsIgnoreCase(".gif")) {
+                    ImageIO.write(teste, "gif", file);
+                    Thread.sleep(DELAY_CAM * 9);
+                } else {
+                    System.out.println("Erro formato de arquivo" + extensao);
+                }
+                
+                
+            } catch (IOException | InterruptedException ex) {
+                Logger.getLogger(TelaTakeFoto.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("O seguinte erro ocorreu: " + ex);
+            }
             Dimension d = lblFotoTake.getSize();
             Dimension dl = lblLastFoto.getSize();
-
             ImageIcon foto;
             ImageIcon fotoLast;
-
             foto = new ImageIcon(file.getPath());
             fotoLast = new ImageIcon(file.getPath());
-
             int widthFoto = d.width;
             int heightFoto = d.height;
-
             int widthLastFoto = dl.width;
             int heightLastFoto = dl.height;
-
             foto.setImage(foto.getImage().getScaledInstance(widthFoto, heightFoto, 100));
             fotoLast.setImage(foto.getImage().getScaledInstance(widthLastFoto, heightLastFoto, 100));
-
             lblFotoCaminho.setText(file.getAbsolutePath());
-            //lblFotoTake.setIcon(foto);
             lblLastFoto.setIcon(fotoLast);
-
-            //verificaFile(file); //verifica o arquivo
-            //lblPetFotoCaminho.setText(file.getAbsolutePath()+" - Criada em: "+ dateFile2);
         } else {
             System.out.println("File access cancelled by user.");
         }
@@ -448,7 +550,7 @@ public class TelaTakeFoto extends javax.swing.JFrame {
         // TODO add your handling code here:
         stopCamFoto();
         try {
-            Thread.sleep(DELAY_CAM * 4);
+            Thread.sleep(DELAY_CAM * 2);
         } catch (InterruptedException ex) {
             System.out.println("Erro na classe telaTakeFoto.java: " + ex);
             Logger.getLogger(TelaTakeFoto.class.getName()).log(Level.SEVERE, null, ex);
@@ -501,6 +603,10 @@ public class TelaTakeFoto extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jSliderFiltroStateChanged
 
+    private void jSliderFiltroOpcStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSliderFiltroOpcStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jSliderFiltroOpcStateChanged
+
     /**
      * @param args the command line arguments
      */
@@ -547,13 +653,16 @@ public class TelaTakeFoto extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelBotoeira;
     private javax.swing.JPanel jPanelCam;
     private javax.swing.JPanel jPanelFiltro;
+    private javax.swing.JPanel jPanelFiltro1;
     private javax.swing.JSlider jSliderCam;
     private javax.swing.JSlider jSliderFiltro;
+    private javax.swing.JSlider jSliderFiltroOpc;
     private javax.swing.JLabel lblCamUsada;
     private javax.swing.JLabel lblFotoCaminho;
     private javax.swing.JLabel lblFotoTake;
     private javax.swing.JLabel lblLastFoto;
     private javax.swing.JLabel lblNumFiltro;
+    private javax.swing.JLabel lblNumFiltroOpc;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -656,52 +765,249 @@ public class TelaTakeFoto extends javax.swing.JFrame {
                 FILTER_NUMBER = jSliderFiltro.getValue();
 
                 while (runnable) {
+                    Filtro f = new Filtro();
+
                     String msg = "";
+                    String msgOpcFiltro = "";
                     int x = 0;
+
+                    FLAG_FILTRO = 0;
 
                     SOURCE_CAM = jSliderCam.getValue();
                     lblCamUsada.setText("Cam: " + jSliderCam.getValue());
-                    lblNumFiltro.setText("Filtro: " + jSliderFiltro.getValue());
+
                     while (x < 10000) {
                         x++;
                     }
 
                     if (camFoto.grab()) {
+
                         try {
 
                             camFoto.retrieve(frame);
 
                             //aplicar um filtro a imagem da tela
                             int filtroOpc = jSliderFiltro.getValue();
-
+                            int vl = jSliderFiltroOpc.getValue();
                             switch (filtroOpc) {
                                 case 0:
-                                    frame = PutFiltro.mainBorda(frame);
+                                    frame = PutFiltro.mainBorda(frame, vl);
                                     msg = "Filtro de borda ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
                                     System.out.println("Esta é a:" + filtroOpc);
                                     break;
                                 case 1:
-                                    frame = PutFiltro.mainGrayScale(frame);
+                                    frame = PutFiltro.mainGray2(frame);
+                                    msg = "Filtro Gray ";
+                                    msgOpcFiltro = msg;
                                     System.out.println("Esta é a:" + filtroOpc);
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
                                     break;
+
                                 case 2:
-                                    frame = PutFiltro.mainGaussian(frame);
-                                    msg = "Filtro Gaussian";
+                                    frame = PutFiltro.mainGaussian(frame, vl);
+                                    msg = "Filtro Gaussian ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
                                     System.out.println("Esta é a:" + filtroOpc);
                                     break;
+
                                 case 3:
                                     frame = PutFiltro.mainThresholding(frame);
-                                    msg = "Filtro Thresholding";
+                                    msg = "Filtro Thresholding ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
                                     System.out.println("Esta é a:" + filtroOpc);
                                     break;
+
                                 case 4:
+                                    frame = PutFiltro.mainPyramids(frame, 0, vl);
+                                    msg = "Filtro Pyramids Up ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
                                     System.out.println("Esta é a:" + filtroOpc);
                                     break;
+
                                 case 5:
+                                    frame = PutFiltro.mainPyramids(frame, 1, vl);
+                                    msg = "Filtro Pyramids Down ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
                                     System.out.println("Esta é a:" + filtroOpc);
                                     break;
+
+                                case 6:
+                                    frame = PutFiltro.mainDilation(frame, vl);
+                                    msg = "Filtro Dilation ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+
+                                case 7:
+                                    frame = PutFiltro.mainEroding(frame, vl);
+                                    msg = "Filtro Eroding ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+
+                                case 8:
+                                    frame = PutFiltro.mainContraste(frame, vl);
+                                    msg = "Filtro Contraste ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+
+                                case 9:
+                                    frame = PutFiltro.mainGrayDac(frame, vl);
+                                    msg = "Filtro Cinza ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+
+                                case 10:
+                                    frame = PutFiltro.mainTeste(frame, vl);
+                                    msg = "Filtro Teste ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+
+                                case 11:
+                                    //frame = PutFiltro.mainTeste1(frame, vl);
+                                    msg = "Filtro Transparencia";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    FLAG_FILTRO = 11; //FILTRO JAVA PURO
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+
+                                case 12:
+                                    frame = PutFiltro.mainBox(frame, vl);
+                                    msg = "Filtro Box ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+
+                                case 13:
+
+                                    msg = "Filtro threshold ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    FLAG_FILTRO = 13; //FILTRO JAVA PURO
+                                    System.out.println("Esta é a:" + filtroOpc);
+
+                                    break;
+
+                                case 14:
+                                    //frame = PutFiltro.mainSepia3(frame);
+                                    msg = "Filtro Sepia ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    FLAG_FILTRO = 14; //FILTRO JAVA PURO
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+
+                                case 15:
+                                    //frame = PutFiltro.mainSepia3(frame);
+                                    msg = "Filtro Negativo ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    FLAG_FILTRO = 15; //FILTRO JAVA PURO
+                                    BufferedImage teste = PutFiltro.mat2Img(frame);
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+
+                                case 16:
+                                    frame = PutFiltro.mainFoto(frame, vl);
+                                    msg = "Filtro Foto ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+
+                                case 17:
+                                    msg = "Filtro thresholdInvertido ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    FLAG_FILTRO = 17; //FILTRO JAVA PURO
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+
+                                case 18:
+                                    msg = "Filtro ScreenShot ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    FLAG_FILTRO = 18; //FILTRO JAVA PURO
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+
+                                case 19:
+                                    msg = "Filtro Seguimento Cor ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    FLAG_FILTRO = 19; //FILTRO JAVA PURO
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+                                    
+                                case 20:
+                                    msg = "Filtro Rotation ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    FLAG_FILTRO = 20; //FILTRO JAVA PURO
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+                                
+                                case 21:
+                                    msg = "Filtro Cores Básicas ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    FLAG_FILTRO = 21; //FILTRO JAVA PURO
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+                                
+                                case 22:
+                                    msg = "Filtro Black/White ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    FLAG_FILTRO = 22; //FILTRO JAVA PURO
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+                                        
                                 default:
-                                    msg = msg + " Petfast by DAC";
+                                    msg = msg + "Sem Filtro ";
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
 
                             }
 
@@ -718,16 +1024,46 @@ public class TelaTakeFoto extends javax.swing.JFrame {
                              Parte experimentando método:
                              public static BufferedImage createBufferedImage(Mat mat)
                              */
-                            Image im = ImageIO.read(new ByteArrayInputStream(mem.toArray()));
+                            //Image im = ImageIO.read(new ByteArrayInputStream(mem.toArray()));
+                            //BufferedImage buff = (BufferedImage) im;
+                            teste = createBufferedImage(frame);
 
-                            BufferedImage buff = (BufferedImage) im;
-
-                            BufferedImage teste = createBufferedImage(frame);
-
+                            if (FLAG_FILTRO == 11) {
+                                //buff = Filtro.negativo(buff); //alterações neste ponto com image Bufferedteste = Filtro.getTransparentIcon(teste); //alterações neste ponto com image Buffered  
+                            } else if (FLAG_FILTRO == 13) {
+                                //buff = Filtro.negativo(buff); //alterações neste ponto com image Buffered
+                                teste = Filtro.threshold(teste, vl * 8); //alterações neste ponto com image Buffered  
+                            } else if (FLAG_FILTRO == 14) {
+                                //buff = Filtro.negativo(buff); //alterações neste ponto com image Buffered
+                                teste = Filtro.mainSepia(teste); //alterações neste ponto com image Buffered  
+                            } else if (FLAG_FILTRO == 15) {
+                                //buff = Filtro.negativo(buff); //alterações neste ponto com image Buffered
+                                teste = Filtro.negativo(teste); //alterações neste ponto com image Buffered 
+                            } else if (FLAG_FILTRO == 17) {
+                                //buff = Filtro.negativo(buff); //alterações neste ponto com image Buffered
+                                teste = Filtro.thresholdInv(teste, vl * 9); //alterações neste ponto com image Buffered  
+                            } else if (FLAG_FILTRO == 18) {
+                                //buff = Filtro.negativo(buff); //alterações neste ponto com image Buffered
+                                teste = Filtro.screenShot(teste); //alterações neste ponto com image Buffered  
+                            }else if (FLAG_FILTRO == 19) {
+                                //buff = Filtro.negativo(buff); //alterações neste ponto com image Buffered
+                                teste = Filtro.mainSegmentoCor(teste, vl); //alterações neste ponto com image Buffered  
+                            }else if (FLAG_FILTRO == 20) {
+                                //buff = Filtro.negativo(buff); //alterações neste ponto com image Buffered
+                                teste = Filtro.rotate1(teste, vl*2.5); //alterações neste ponto com image Buffered  
+                            }else if (FLAG_FILTRO == 21) {
+                                //buff = Filtro.negativo(buff); //alterações neste ponto com image Buffered
+                                teste = Filtro.filter(teste, vl); //alterações neste ponto com image Buffered  
+                            }else if (FLAG_FILTRO == 22) {
+                               //buff = Filtro.negativo(buff); //alterações neste ponto com image Buffered
+                               int[][] var = new int [2][2];
+                                teste = Filtro.orderedDither(teste, var); //alterações neste ponto com image Buffered  
+                            }
+                            //
                             Graphics gCam1 = lblFotoTake.getGraphics();
 
                             //if (gCam1.drawImage(buff, tamBorder, tamBorder, width, height, 0, 0, buff.getWidth(), buff.getHeight(), null)) {
-                            // Código if original na linha acima, abaixo utilizo o resultado do metodo createBufferedImage()
+                            //Código if original na linha acima, abaixo utilizo o resultado do metodo createBufferedImage()
                             if (gCam1.drawImage(teste, tamBorder, tamBorder, width, height, 0, 0, teste.getWidth(), teste.getHeight(), null)) {
 
                                 cmdTakePicture.setText("Tirar Foto");
@@ -739,6 +1075,7 @@ public class TelaTakeFoto extends javax.swing.JFrame {
                             } else {
 
                             }
+
                         } catch (Exception ex) {
                             System.out.println("Error" + "Captura video : " + ex);
 
