@@ -63,6 +63,6 @@ public class ImageFilter extends FileFilter {
 
     //The description of this filter
     public String getDescription() {
-        return "Just Images";
+        return "Aceita somente arquivos de imagem: jpg, jpeg, png, bmp, wbmp ou gif.";
     }
 }
