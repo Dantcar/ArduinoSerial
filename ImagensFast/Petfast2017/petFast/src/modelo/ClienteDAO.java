@@ -242,8 +242,8 @@ public class ClienteDAO {
             return cliente;
 
         } else {
-            msg = "Cliente não encontrado";
-            JOptionPane.showMessageDialog(null, msg);
+            //msg = "Cliente não encontrado";
+            //JOptionPane.showMessageDialog(null, msg);
             close();
             return null;
         }

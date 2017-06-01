@@ -1,7 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Este Software tem Objetivo Educacional
+ * Para fins de TCC
+ * do Curso de Analise de Sistemas da Fatec - Ipiranga
+ * Ano 2016 - Julho a Dezembnro  
+ * Aluno Decio Antonio de Carvalho  * 
  */
 
 
@@ -67,6 +69,12 @@ public class UsuarioDAO {
     select * from DAC.USUARIO
     WHERE LOGIN = 'Teste' AND SENHA = '12345abc';
     */
+    /**
+     * 01 - 
+     * @param user
+     * @param password
+     * @return 
+     */
     public boolean logarPetfast(String user, String password){
         boolean resposta = false ;
         
