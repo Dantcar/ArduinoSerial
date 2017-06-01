@@ -1,0 +1,14 @@
+Fri Nov 25 08:43:15 BRST 2016 : Apache Derby Servidor de Rede - 10.8.3.2 - (1557835) iniciado e pronto para aceitar conexões na porta 1527 em {3}
+----------------------------------------------------------------
+Fri Nov 25 08:43:16 BRST 2016:
+ Inicializando o Derby versão The Apache Software Foundation - Apache Derby - 10.8.3.2 - (1557835): instância a816c00e-0158-9b14-fc58-fffff1bc1fe6
+no diretório de banco de dados C:\Documents and Settings\deciodecarvalho\Meus documentos\Google Drive\projetosJava\PetFast\petFast\db\Petfast  
+
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_80-b15
+user.dir=C:\Arquivos de programas\Java\jdk1.7.0_80\db
+os.name=Windows XP
+os.arch=x86
+os.version=5.1
+derby.system.home=C:\Documents and Settings\deciodecarvalho\Meus documentos\Google Drive\projetosJava\PetFast\petFast\db
+Carregador de classe do banco de dados iniciado - derby.database.classpath=''
