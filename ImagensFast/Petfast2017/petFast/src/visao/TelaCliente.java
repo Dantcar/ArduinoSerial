@@ -6,9 +6,11 @@
  * Ano 2016 - julho a Dezembro 2016 
  * Aluno Decio Antonio de Carvalho  * 
  */
+
 package visao;
 
 import controle.ClienteCtrl;
+import static controle.ClienteCtrl.receberClienteRG;
 import static controle.ClienteCtrl.receberClienteCPF;
 import static controle.ClienteCtrl.receberClienteNome;
 import static controle.ClienteCtrl.receberClienteTelefone;
@@ -942,6 +944,10 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         try {
 
             cliente = receberClienteCPF(tftCPF.getText());
+            
+            if (cliente == null){
+                cliente = receberClienteRG(tftRG.getText());
+            }
 
             if (cliente == null){
                 cliente = receberClienteTelefone(tftTelefone.getText());
