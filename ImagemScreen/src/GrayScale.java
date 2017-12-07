@@ -25,12 +25,9 @@ public class GrayScale {
     
     int heigth;
     
-    public GrayScale() {
-        
-        
-        
+    public GrayScale() {  
         try {
-            File input = new File("d:\\teste.png");
+            File input = new File("e:\\fotos\\d.png");
             image = ImageIO.read(input);
             width = image.getWidth();
             heigth = image.getHeight();
@@ -53,7 +50,7 @@ public class GrayScale {
                 }
             }
             
-            File output = new File("d:\\grayscale.jpg");
+            File output = new File("e:\\fotos\\d_grayscale.jpg");
             ImageIO.write(image, "jpg", output);
             
         } catch (IOException ex) {

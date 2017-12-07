@@ -1,4 +1,17 @@
 
+/**
+ * Sao Paulo 03-12-2017
+ * Class FiltroSelec.java
+ *
+ * @author Decio A Carvalho
+ * @serial 0.2
+ * @since Dezembro-2017
+ *
+ * Retomada dos Estudos com manipulacao de imagens utilizando:
+ * Java.awt.Graphcs2d, Java.awt.Graphics, Java.awt.image, Java.awt.Color,
+ * Java.awt.Robot, Java.awt.geom, Java.io, Java.net, Java.util, Java.imageio,
+ * Java.swing, Java.text, Java.awt.AWTException Java.awt.Rectangle,
+ */
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -34,24 +47,17 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author Décio
- */
 //Image im = makeColorTransparent(new ImageIcon(screenShot).getImage(), Color.BLACK);
-public class Filtro {
+public class FiltroSelec {
 
     static boolean sFlagServer = true;
 
-    //método de aplicação do filtro escala de cinza
-    //recebe como parâmetro uma imagem
-    //método de aplicação do filtro escala de cinza
-    //recebe como parâmetro uma imagem
+    /**
+     * Metodo 01 Metodo de aplicação do filtro escala de cinza
+     *
+     * @param imagem (BufferedImage)
+     * @return imagem (BufferedImage)
+     */
     public static BufferedImage escalaDeCinza(BufferedImage imagem) {
         //pegar largura e altura da imagem
         int width = imagem.getWidth();
@@ -77,8 +83,197 @@ public class Filtro {
             }
         }
         return imagem;
-    }
+    }// Final metodo 01 - BufferedImage escalaDeCinza
 
+    /**
+     * Metodo 02 Metodo void de aplicação do filtro escala de cinza
+     *
+     * @param imagem (BufferedImage)
+     */
+    public static void escalaDeCinza1(BufferedImage imagem) {
+        //pegar largura e altura da imagem
+        int width = imagem.getWidth();
+        int height = imagem.getHeight();
+
+        int media = 0;
+        //laço para varrer a matriz de pixels da imagem
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {//rgb recebe o valor RGB do pixel em questão                
+                int rgb = imagem.getRGB(i, j);
+                int r = (int) ((rgb & 0x00FF0000) >>> 16); //R
+                int g = (int) ((rgb & 0x0000FF00) >>> 8);  //G
+                int b = (int) (rgb & 0x000000FF);       //B
+
+                //media dos valores do RGB
+                //será o valor do pixel na nova imagem
+                media = (r + g + b) / 3;
+
+                //criar uma instância de Color
+                Color color = new Color(media, media, media);
+                //setar o valor do pixel com a nova cor
+                imagem.setRGB(i, j, color.getRGB());
+            }
+        }
+
+    }// Final metodo 02 - void escalaDeCinza1
+
+    /**
+     * Metodo 03 Metodo void de aplicação do filtro posterizer
+     *
+     * @param imagem (BufferedImage)
+     */
+    public static void posterizer(BufferedImage imagem, int var) {
+        //pegar largura e altura da imagem
+        int width = imagem.getWidth();
+        int height = imagem.getHeight();
+
+        //laço para varrer a matriz de pixels da imagem
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {//rgb recebe o valor RGB do pixel em questão                
+                int rgb = imagem.getRGB(i, j);
+                int r = (int) ((rgb & 0x00FF0000) >>> 16); //R
+                int g = (int) ((rgb & 0x0000FF00) >>> 8);  //G
+                int b = (int) (rgb & 0x000000FF);       //B
+
+                //Filtra os valores de cada cor pelos ifs abaixo
+                if (r > 10 * var) {
+                    r = 0;
+                }
+
+                if (b > 10 * var) {
+                    b = 0;
+                }
+                //será o valor do pixel na nova imagem
+
+                //criar uma instância de Color
+                Color color = new Color(r, g, b);
+                //setar o valor do pixel com a nova cor
+                imagem.setRGB(i, j, color.getRGB());
+            }
+        }
+
+    }// Final metodo 03 - void posterizer
+
+    /**
+     * Metodo 04 Metodo void de aplicação do filtro posterizer
+     *
+     * @param imagem (BufferedImage)
+     */
+    public static void posterizer1(BufferedImage imagem) {
+        //pegar largura e altura da imagem
+        int width = imagem.getWidth();
+        int height = imagem.getHeight();
+
+        //laço para varrer a matriz de pixels da imagem
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {//rgb recebe o valor RGB do pixel em questão                
+                int rgb = imagem.getRGB(i, j);
+                int r = (int) ((rgb & 0x00FF0000) >>> 16); //R
+                int g = (int) ((rgb & 0x0000FF00) >>> 8);  //G
+                int b = (int) (rgb & 0x000000FF);       //B
+
+                //Filtra os valores de cada cor red
+                if (r < 64) {
+                    r = 31;
+                }
+
+                if (r > 63 && r < 128) {
+                    r = 95;
+                }
+
+                if (r > 191 && r < 256) {
+                    r = 223;
+                }
+
+                //Filtra os valores de cada cor green
+                if (g < 64) {
+                    g = 31;
+                }
+
+                if (g > 63 && g < 128) {
+                    g = 95;
+                }
+
+                if (g > 191 && g < 256) {
+                    g = 223;
+                }
+
+                //Filtra os valores de cada cor blue
+                if (b < 64) {
+                    b = 31;
+                }
+
+                if (b > 63 && b < 128) {
+                    b = 95;
+                }
+
+                if (b > 191 && b < 256) {
+                    b = 223;
+                }
+
+                //será o valor do pixel na nova imagem
+                //criar uma instância de Color
+                Color color = new Color(r, g, b);
+                //setar o valor do pixel com a nova cor
+                imagem.setRGB(i, j, color.getRGB());
+            }
+        }
+
+    }// Final metodo 04 - void posterizer1
+
+    /**
+     * Metodo 05 Metodo void de aplicação do filtro quadricular
+     *
+     * @param imagem
+     * @param var
+     */
+    public static void quadricular(BufferedImage imagem, int var) {
+        //pegar largura e altura da imagem
+        int width = imagem.getWidth();
+        int height = imagem.getHeight();
+
+        //laço para varrer a matriz de pixels da imagem
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {//rgb recebe o valor RGB do pixel em questão                
+                int rgb = imagem.getRGB(i, j);
+                int r = (int) ((rgb & 0x00FF0000) >>> 16); //R
+                int g = (int) ((rgb & 0x0000FF00) >>> 8);  //G
+                int b = (int) (rgb & 0x000000FF);       //B
+
+                if (i % var == 0) {
+                    r = 255;
+                    g = 255;
+                    b = 255;
+                    //cria uma linha vertical
+                    //criar uma instância de Color
+                    Color color = new Color(r, g, b);
+                    //setar o valor do pixel com a nova cor
+                    imagem.setRGB(i, j, color.getRGB());
+
+                }// final if do i
+
+                if (j % var == 0) {
+                    r = 255;
+                    g = 255;
+                    b = 255;
+                    //cria uma linha horizontal
+                    //criar uma instância de Color
+                    Color color = new Color(r, g, b);
+                    //setar o valor do pixel com a nova cor
+                    imagem.setRGB(i, j, color.getRGB());
+
+                }// final if do j
+            }
+        }
+
+    }// Final metodo 05 - void quadricular
+
+    /**
+     * Metodo 06 Metodo para aplicação do filtro quadricular
+     *
+     * @param image
+     * @return BufferedImage
+     */
     public static BufferedImage negativo(BufferedImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
@@ -93,8 +288,35 @@ public class Filtro {
             }
         }
         return image;
-    }
+    }// final metodo 06 - BufferedImage negativo
 
+    /**
+     * Metodo 07 Metodo para aplicação do filtro quadricular
+     *
+     * @param image
+     */
+    public static void negativo1(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                int rgb = image.getRGB(i, j);//a cor inversa é dado por 255 menos o valor da cor                 
+                int r = 255 - (int) ((rgb & 0x00FF0000) >>> 16);
+                int g = 255 - (int) ((rgb & 0x0000FF00) >>> 8);
+                int b = 255 - (int) (rgb & 0x000000FF);
+                Color color = new Color(r, g, b);
+                image.setRGB(i, j, color.getRGB());
+            }
+        }
+    }// final metodo 07 - BufferedImage negativo
+
+    /**
+     * Metodo 08 Metodo para aplicar o Filtro Threshold.
+     *
+     * @param image
+     * @param limiar
+     * @return BufferedImage
+     */
     public static BufferedImage threshold(BufferedImage image, int limiar) {
         int width = image.getWidth();
         int height = image.getHeight();
@@ -119,12 +341,45 @@ public class Filtro {
             }
         }
         return image;
-    }
+    }// final metodo 08 - BufferedImage threshold
 
     /**
+     * Metodo 09 Metodo para aplicar o Filtro Threshold.
+     *
+     * @param image
+     * @param limiar
+     */
+    public static void threshold1(BufferedImage image, int limiar) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                int rgb = image.getRGB(i, j);
+                int r = (int) ((rgb & 0x00FF0000) >>> 16);
+                int g = (int) ((rgb & 0x0000FF00) >>> 8);
+                int b = (int) (rgb & 0x000000FF);
+                int media = (r + g + b) / 3;
+                Color white = new Color(255, 255, 255);
+                Color black = new Color(0, 0, 0);
+                //como explicado no artigo, no threshold definimos um limiar,
+                //que é um valor "divisor de águas"
+                //pixels com valor ABAIXO do limiar viram pixels PRETOS,
+                //pixels com valor ACIMA do limiar viram pixels BRANCOS
+                if (media < limiar) {
+                    image.setRGB(i, j, black.getRGB());
+                } else {
+                    image.setRGB(i, j, white.getRGB());
+                }
+            }
+        }
+
+    }// final metodo 09 - void threshold
+
+    /**
+     * Metodo 10 Metodo que aplica o filtro color2sepia (Sepia).
      *
      * @param inImage
-     * @return
+     * @return BufferedImage
      */
     public static BufferedImage color2sepia(BufferedImage inImage) {
 
@@ -146,10 +401,37 @@ public class Filtro {
             }
         }
         return (outImage);
-    }//final BufferedImage color2sepia
+    }//final Metodo 10 - BufferedImage color2sepia
 
     /**
-     * Sepia
+     * Metodo 11 Metodo que aplica o filtro color2sepia1 (Sepia).
+     *
+     * @param inImage
+     */
+    public static void color2sepia1(BufferedImage inImage) {
+
+        int width = inImage.getWidth();
+        int height = inImage.getHeight();
+        BufferedImage outImage = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                Color c = new Color(inImage.getRGB(j, i));
+                int red = (int) (c.getRed());
+                int green = (int) (c.getGreen());
+                int blue = (int) (c.getBlue());
+                Color newColor = new Color(
+                        (red * .393f) + (green * .769f) + (blue * .189f),
+                        (red * .349f) + (green * .686f) + (blue * .168f),
+                        (red * .272f) + (green * .534f) + (blue * .131f)
+                );
+                outImage.setRGB(j, i, newColor.getRGB());
+            }
+        }
+
+    }//final Metodo 11 - void color2sepia1
+
+    /**
+     * Metodo 12 Sepia
      *
      * @param source
      * @return
@@ -210,13 +492,14 @@ public class Filtro {
         //write image
         return source;
 
-    }//final BufferedImage mainSepia3
+    }//final Metodo 12 - BufferedImage mainSepia3
 
     /**
+     * Metodo 13 Metodo que aplica o filtro makeColorTransparent
      *
-     * @param im
-     * @param color
-     * @return
+     * @param Image im
+     * @param Color color
+     * @return Image
      */
     public static Image makeColorTransparent(Image im, final Color color) {
         ImageFilter filter = new RGBImageFilter() {
@@ -242,12 +525,160 @@ public class Filtro {
 
         ImageProducer ip = new FilteredImageSource(im.getSource(), filter);
         return Toolkit.getDefaultToolkit().createImage(ip);
-    }//final Image makeColorTransparent
+
+    }//final Metodo 13 - Image makeColorTransparent
 
     /**
+     * Metodo 14 Filtro 3 cores básicas vermelho, verde, azul
      *
+     * @param img
+     * @param cor
+     */
+    public static void filter(BufferedImage img, int cor) {
+        //BufferedImage ans = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
+        int choice = (cor % 4) + 1;
+        //System.out.println(choice);
+        int graylvl;
+
+        for (int x = 0; x < img.getWidth(); x++) {
+            for (int y = 0; y < img.getHeight(); y++) {
+
+                if (x < img.getWidth() / 2) {
+                    if (y < img.getHeight() / 2) {
+                        switch (choice) {
+                            case 1:
+                                graylvl = (img.getRGB(x, y) & 0xff);
+                                img.setRGB(x, y, graylvl);
+                                break;
+                            case 2:
+                                graylvl = (img.getRGB(x, y) & 0xff00);
+                                img.setRGB(x, y, graylvl);
+                                break;
+                            case 3:
+                                graylvl = (img.getRGB(x, y) & 0xff0000);
+                                img.setRGB(x, y, graylvl);
+                                break;
+                            case 4:
+                                graylvl = (img.getRGB(x, y) & 0xffff00);
+
+                                img.setRGB(x, y, graylvl);
+                                break;
+
+                        }// final switch case1
+                    } else {
+                        switch (choice) {
+                            case 1:
+                                graylvl = (img.getRGB(x, y) & 0xffff00);
+                                img.setRGB(x, y, graylvl);
+                                break;
+                            case 2:
+                                graylvl = (img.getRGB(x, y) & 0xff);
+                                img.setRGB(x, y, graylvl);
+                                break;
+                            case 3:
+                                graylvl = (img.getRGB(x, y) & 0xff00);
+                                img.setRGB(x, y, graylvl);
+                                break;
+                            case 4:
+                                graylvl = (img.getRGB(x, y) & 0xff0000);
+                                img.setRGB(x, y, graylvl);
+                                break;
+                            default:
+                                graylvl = (img.getRGB(x, y) & 0xffff00);
+                                img.setRGB(x, y, graylvl);
+                                break;
+                        }// final switch case2
+                    }
+
+                } else {
+                     if (y < img.getHeight() / 2) {
+                        switch (choice) {
+                            case 1:
+                                graylvl = (img.getRGB(x, y) & 0xff0000);
+                                img.setRGB(x, y, graylvl);
+                                break;
+                            case 2:
+                                graylvl = (img.getRGB(x, y) & 0xffff00);
+                                img.setRGB(x, y, graylvl);
+                                break;
+                            case 3:
+                                graylvl = (img.getRGB(x, y) & 0xff);
+                                img.setRGB(x, y, graylvl);
+                                break;
+                            case 4:
+                                graylvl = (img.getRGB(x, y) & 0xff00);
+                                img.setRGB(x, y, graylvl);
+                                break;
+                            
+                        }// final switch case1
+                    } else {
+                        switch (choice) {
+                            case 1:
+                                graylvl = (img.getRGB(x, y) & 0xff00);
+                                img.setRGB(x, y, graylvl);
+                                break;
+                            case 2:
+                                graylvl = (img.getRGB(x, y) & 0xff0000);
+                                img.setRGB(x, y, graylvl);
+                                break;
+                            case 3:
+                                graylvl = (img.getRGB(x, y) & 0xffff00);
+                                img.setRGB(x, y, graylvl);
+                                break;
+                            case 4:
+                                graylvl = (img.getRGB(x, y) & 0xff);
+                                img.setRGB(x, y, graylvl);
+                                break;
+                            
+                            default:
+                                graylvl = (img.getRGB(x, y) & 0xffff00);
+                                img.setRGB(x, y, graylvl);
+                                break;
+                        }// final switch case2
+                    }
+                }
+
+            }//final for y
+        } //final for x
+
+    }//final método 14 - void filter
+    
+    /**
+     * Metodo - 15
+     * Metodo que aplica o Filtro de rotacionar em 90 graus.
+     * @param image 
+     */
+    public static void flip2(BufferedImage image) {
+        for (int i = 0; i < image.getWidth(); i++) {
+            for (int j = 0; j < image.getHeight() / 2; j++) {
+                int tmp = image.getRGB(i, j);
+                image.setRGB(i, j, image.getRGB(i, image.getHeight() - j - 1));
+                image.setRGB(i, image.getHeight() - j - 1, tmp);
+            }
+        }
+    }// final metodo 15 - void flip
+    
+
+    /**
+     * Metodo 16
+     * Metodo que aplica o filtro de girar horizontalmente a imagem
      * @param image
-     * @return
+     * @return 
+     */
+    public static BufferedImage flipHoriz(BufferedImage image) {
+        BufferedImage newImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        int dif = image.getWidth()-image.getHeight();
+        Graphics2D gg = newImage.createGraphics();
+        gg.drawImage(image, image.getHeight()+dif, 0, -image.getWidth(), image.getHeight(), null);
+        gg.dispose();
+        return newImage;
+    }// final metodo 16 - BufferedImage flipHoriz
+    
+    /**
+     * Metodo 17
+     * Metodo auxiliar para manipulacao de imagens 
+     * @param Image image
+     * @return BufferedImage image
      */
     public static BufferedImage toBufferedImage(Image image) {
         if (image instanceof BufferedImage) {
@@ -263,12 +694,14 @@ public class Filtro {
         g.drawImage(image, 0, 0, null);
         g.dispose();
         return bimage;
-    }
+        
+    }//final metodo 17 BufferedImage toBufferedImage
 
     /**
-     *
+     * Metodo 18
+     * Metodo auxiliar para manipulacao de imagens
      * @param i
-     * @return
+     * @return BufferedImage
      */
     public static BufferedImage getTransparentIcon(BufferedImage i) {
         if (i == null) {
@@ -287,7 +720,7 @@ public class Filtro {
         ImageProducer ip = new FilteredImageSource(i.getSource(), filter);
         return toBufferedImage(Toolkit.getDefaultToolkit().createImage(ip));
 
-    }//final BufferedImage getTransparentIcon
+    }//final metodo 18 - BufferedImage getTransparentIcon
 
     /**
      * Método thresholdInv
@@ -556,7 +989,7 @@ public class Filtro {
         //mainClient("D:\\TwitterD4ntcar.png","Imagem from Client"); //comando
         Socket soc = null;
         BufferedImage img = null;
-        String filename = "D:\\TwitterD4ntcar.png";
+        String filename = "D:\\AFoto17.png";
         String message = "Imagem from Client";
 
         try {
@@ -614,7 +1047,7 @@ public class Filtro {
      * @param cor
      * @return
      */
-    public static BufferedImage filter(BufferedImage img, int cor) {
+    public static BufferedImage filter1(BufferedImage img, int cor) {
         BufferedImage ans = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
         int choice = (cor % 4) + 1;
         System.out.println(choice);
@@ -791,7 +1224,7 @@ public class Filtro {
         int width = inImage.getWidth();
         int height = inImage.getHeight();
         BufferedImage outImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        
+
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 int pixel = inImage.getRGB(j, i);
@@ -799,91 +1232,82 @@ public class Filtro {
                 r = (int) (getRed(pixel) * var);
                 g = (int) (getGreen(pixel) * var);
                 b = (int) (getBlue(pixel) * var);
-                    outImage.setRGB(j, i, makeRGBColor(r, g, b));
+                outImage.setRGB(j, i, makeRGBColor(r, g, b));
             }
         }
-        
+
         return (outImage);
     }//final BufferedImage colorRedToGreen
 
     /**
      * Methods to help manipulate colors You don't have to worry about how these
      * work, but ask me if you are curious.
-     */
-    /**
-     * Methods to help manipulate colors You don't have to worry about how these
-     * work, but ask me if you are curious.
      *
      * @param red
+     * @return rgb (int)
      */
     public static int makeRGBColor(int red, int green, int blue) {
         int rgb = 0;
         rgb = red * 65536 + green * 256 + blue;
         //rgb = red * 256 + green * 256 + blue;
-        
-        return rgb;
-    }
 
+        return rgb;
+    }// final metodo makeRGBColor
+
+    /**
+     * Metodo getRed
+     * Metodo auxiliar para Filtro
+     * @param pixel
+     * @return red (int)
+     */
     private static int getRed(int pixel) {
         return (pixel >> 16) & 0xFF;
     }
 
+    /**
+     * Metodo getGreen
+     * Metodo auxiliar para Filtro
+     * @param pixel
+     * @return green (int)
+     */
     private static int getGreen(int pixel) {
         return (pixel >> 8) & 0xFF;
     }
 
+    /**
+     * Metodo getBlue
+     * Metodo auxiliar para Filtro
+     * @param pixel
+     * @return 
+     */
     private static int getBlue(int pixel) {
         return (pixel) & 0xFF;
     }
+
+
     
-    public static void flip(BufferedImage image)
-{
-    for (int i=0;i<image.getWidth();i++)
-        for (int j=0;j<image.getHeight()/2;j++)
-        {
-            int tmp = image.getRGB(i, j);
-            image.setRGB(i, j, image.getRGB(i, image.getHeight()-j-1));
-            image.setRGB(i, image.getHeight()-j-1, tmp);
-        }
-}
 
-public static BufferedImage flipHoriz(BufferedImage image) {
-    BufferedImage newImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-    Graphics2D gg = newImage.createGraphics();
-    gg.drawImage(image, image.getHeight(), 0, -image.getWidth(), image.getHeight(), null);
-    gg.dispose();
-    return newImage;
-}// final metodo flipHoriz
-
-public static BufferedImage flipHorizontally(BufferedImage image)
-    {
+    public static BufferedImage flipHorizontally(BufferedImage image) {
         BufferedImage newImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
 
-       
-        for(int y=0; y<image.getHeight(); ++y)
+        for (int y = 0; y < image.getHeight(); ++y) {
 
-        {
-
-            for(int x=0; x<image.getWidth(); ++x)
-            {
+            for (int x = 0; x < image.getWidth(); ++x) {
                 //one way
                 //newImage[x][y] = image[image.getWidth()-x-1][y];
 
                 //another way
-                int x2 = image.getWidth() - x  - 1 ;
-
+                int x2 = image.getWidth() - x - 1;
                 x = x2;
 
-                int y2 = image.getHeight() - y - 1 ;
+                int y2 = image.getHeight() - y - 1;
                 y = y2;
 
-                Color pixelColor = new Color(image.getRGB(x,y));
+                Color pixelColor = new Color(image.getRGB(x, y));
 
-                int Red = (int)(pixelColor.getRed());
-
-                int Green = (int)(pixelColor.getGreen());
-
-                int Blue = (int)(pixelColor.getBlue());
+                int Red = (int) (pixelColor.getRed());
+                int Green = (int) (pixelColor.getGreen());
+                int Blue = (int) (pixelColor.getBlue());
 
                 Color newPixelColor = new Color(Red, Green, Blue);
 
@@ -893,46 +1317,5 @@ public static BufferedImage flipHorizontally(BufferedImage image)
         return newImage;
     }// final metodo flipHoriz2
 
-/*
 
-    // Task 2A: Flip Horizontally
-
-    public static BufferedImage flipHorizontally(BufferedImage image)
-    {
-        BufferedImage newImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
-
-        for(int y=0; y<image.getHeight(); ++y)
-
-        {
-
-            for(int x=0; x<image.getWidth(); ++x)
-            {
-                //one way
-                newImage[x][y] = image[image.getWidth()-x-1][y];
-
-                //another way
-                int x2 = image.getWidth() - x  - 1 ;
-
-                x = x2;
-
-                int y2 = image.getHeight() - y - 1 ;
-                y = y2;
-
-                Color pixelColor = new Color(image.getRGB(x,y));
-
-                int Red = (int)(pixelColor.getRed());
-
-                int Green = (int)(pixelColor.getGreen());
-
-                int Blue = (int)(pixelColor.getBlue());
-
-                Color newPixelColor = new Color(Red, Green, Blue);
-
-                newImage.setRGB(x, y, newPixelColor.getRGB());
-            }
-        }
-        return newImage;
-    }
-
-*/
 }//Final class Filtro

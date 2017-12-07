@@ -37,7 +37,7 @@ import org.opencv.highgui.VideoCapture;
  *
  * @author Décio
  */
-public class TelaTakeFoto extends javax.swing.JFrame {
+public class TakePicture extends javax.swing.JFrame {
 
     private static int FLAG_FILTRO = 0;
 
@@ -64,7 +64,7 @@ public class TelaTakeFoto extends javax.swing.JFrame {
     /**
      * Creates new form TelaTakeFoto
      */
-    public TelaTakeFoto() {
+    public TakePicture() {
 
         UIManager.put("jSliderCam.selectionBackground", Color.black);
         UIManager.put("jSliderCam.selectionForeground", Color.white);
@@ -651,7 +651,7 @@ public class TelaTakeFoto extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new TelaTakeFoto().setVisible(true);
+                new TakePicture().setVisible(true);
             }
         });
     }
@@ -806,6 +806,7 @@ public class TelaTakeFoto extends javax.swing.JFrame {
                             int filtroOpc = jSliderFiltro.getValue();
                             int vl = jSliderFiltroOpc.getValue();
                             switch (filtroOpc) {
+                                
                                 case 0:
                                     frame = PutFiltro.mainBorda(frame, vl);
                                     msg = "Filtro de borda ";
@@ -957,10 +958,11 @@ public class TelaTakeFoto extends javax.swing.JFrame {
                                     break;
 
                                 case 16:
-                                    msg = msg + "Sem Filtro ";
+                                    msg = msg + "Filtro void Gray ";
                                     msgOpcFiltro = msg;
                                     lblNumFiltro.setText(msg + jSliderFiltro.getValue());
                                     lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    FLAG_FILTRO = 16; //FILTRO JAVA PURO
                                     System.out.println("Esta é a:" + filtroOpc);
                                     break;
 
@@ -1028,11 +1030,20 @@ public class TelaTakeFoto extends javax.swing.JFrame {
                                     break;
                                     
                                     case 24:
-                                    msg = "imagem espelhada ";
+                                    msg = "Filtro Posterize ";
                                     msgOpcFiltro = msg;
                                     lblNumFiltro.setText(msg + jSliderFiltro.getValue());
                                     lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
                                     FLAG_FILTRO = 24; //FILTRO JAVA PURO
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+                                    
+                                    case 25:
+                                    msg = "Filtro quadricular ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    FLAG_FILTRO = 25; //FILTRO JAVA PURO
                                     System.out.println("Esta é a:" + filtroOpc);
                                     break;
                                     
@@ -1063,22 +1074,20 @@ public class TelaTakeFoto extends javax.swing.JFrame {
                             teste = createBufferedImage(frame);
 
                             if (FLAG_FILTRO == 10) {
-                                teste = Filtro.flipHorizontally(teste);
-                                //buff = Filtro.negativo(buff); //alterações neste ponto com image Bufferedteste = Filtro.getTransparentIcon(teste); //alterações neste ponto com image Buffered  
+                                teste = FiltroSelec.flipHoriz(teste);
                             }else if (FLAG_FILTRO == 11){
                                 Filtro.flip(teste);
                             } else if (FLAG_FILTRO == 13) {
-                                //buff = Filtro.negativo(buff); //alterações neste ponto com image Buffered
-                                teste = Filtro.threshold(teste, vl * 8); //alterações neste ponto com image Buffered  
+                                FiltroSelec.threshold1(teste, vl * 5); //alterações neste ponto com image Buffered  
                             } else if (FLAG_FILTRO == 14) {
-                                //buff = Filtro.negativo(buff); //alterações neste ponto com image Buffered
-                                teste = Filtro.mainSepia(teste); //alterações neste ponto com image Buffered  
+                                teste = FiltroSelec.mainSepia(teste); //alterações neste ponto com image Buffered
+                                //FiltroSelec.color2sepia1(teste); //esta com erro
                             } else if (FLAG_FILTRO == 15) {
                                 //buff = Filtro.negativo(buff); //alterações neste ponto com image Buffered
-                                teste = Filtro.negativo(teste); //alterações neste ponto com image Buffered 
+                                FiltroSelec.negativo1(teste); //alterações neste ponto com image Buffered 
                             } else if (FLAG_FILTRO == 16) {
                                 //buff = Filtro.negativo(buff); //alterações neste ponto com image Buffered
-                                teste = Filtro.negativo(teste); //alterações neste ponto com image Buffered 
+                                FiltroSelec.escalaDeCinza1(teste); //alterações neste ponto com image Buffered 
                             } else if (FLAG_FILTRO == 17) {
                                 //buff = Filtro.negativo(buff); //alterações neste ponto com image Buffered
                                 teste = Filtro.thresholdInv(teste, vl * 7); //alterações neste ponto com image Buffered  
@@ -1093,22 +1102,29 @@ public class TelaTakeFoto extends javax.swing.JFrame {
                                 teste = Filtro.rotate1(teste, vl * 2.5); //alterações neste ponto com image Buffered  
                             } else if (FLAG_FILTRO == 21) {
                                 //buff = Filtro.negativo(buff); //alterações neste ponto com image Buffered
-                                teste = Filtro.filter(teste, vl); //alterações neste ponto com image Buffered  
+                                FiltroSelec.filter(teste, vl); //alterações neste ponto com image Buffered  
                             } else if (FLAG_FILTRO == 22) {
                                 //buff = Filtro.negativo(buff); //alterações neste ponto com image Buffered
                                 //int[][] var = new int[2][2];
                                 //teste = Filtro.orderedDither(teste, var); //alterações neste ponto com image Buffered  
                                 //teste = Filtro.blackWhite(teste);
                                 teste = Filtro.thresholdImage(teste, vl*6);
-                            }else if (FLAG_FILTRO == 23) {
+                            } else if (FLAG_FILTRO == 23) {
                                 //buff = Filtro.negativo(buff); //alterações neste ponto com image Buffered
                                 //int[][] var = new int[2][2];
                                 float v2 = (float)((vl/2.5) * 2.5); 
                                 //teste = Filtro.orderedDither(teste, var); //alterações neste ponto com image Buffered  
                                 teste = Filtro.colorRedToGreen(teste, (float)v2);
-                            }else if (FLAG_FILTRO == 24) {
-                                Filtro.flip(teste);
+                            } else if (FLAG_FILTRO == 24) {
+                                FiltroSelec.posterizer1(teste);
+                                //FiltroSelec.posterizer(teste, vl);
+                            } else if (FLAG_FILTRO == 25) {
+                                FiltroSelec.quadricular((teste),vl);
+                                //FiltroSelec.posterizer(teste, vl);
                             }
+                            
+                            
+                            
                             //
                             Graphics gCam1 = lblFotoTake.getGraphics();
 
