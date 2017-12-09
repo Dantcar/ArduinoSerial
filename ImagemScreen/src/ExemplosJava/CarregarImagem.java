@@ -54,7 +54,7 @@ public class CarregarImagem extends Component {
 
     public static void main(String[] args) {
         
-        CarregarImagem.montarTela("D:AFoto18.png");
+        CarregarImagem.montarTela("D://images//AFoto18.png");
     }
     
 } //final CarregarImagem
