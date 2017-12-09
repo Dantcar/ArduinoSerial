@@ -14,6 +14,7 @@
  */
 import java.awt.AWTException;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -343,12 +344,12 @@ public class FiltroSelec {
         return image;
     }// final metodo 08 - BufferedImage threshold
 
+   
     /**
-     * Metodo 09 Metodo para aplicar o Filtro Threshold.
-     *
-     * @param image
-     * @param limiar
-     */
+    *  Metodo 09 Metodo para aplicar o Filtro Threshold.
+    * @param image
+    * @param limiar 
+    */
     public static void threshold1(BufferedImage image, int limiar) {
         int width = image.getWidth();
         int height = image.getHeight();
@@ -658,7 +659,6 @@ public class FiltroSelec {
         }
     }// final metodo 15 - void flip
     
-
     /**
      * Metodo 16
      * Metodo que aplica o filtro de girar horizontalmente a imagem
@@ -721,7 +721,208 @@ public class FiltroSelec {
         return toBufferedImage(Toolkit.getDefaultToolkit().createImage(ip));
 
     }//final metodo 18 - BufferedImage getTransparentIcon
+    
+    
+    /**
+     * Metodo 19 Metodo para aplicação do filtro novidade
+     *
+     * @param image
+     * @return BufferedImage
+     */
+    public static BufferedImage novidade(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                int rgb = image.getRGB(i, j);//a cor inversa é dado por 255 menos o valor da cor                 
+                int varR = (int) ((rgb & 0x00FF0000) >>> 16);
+                int varG = (int) ((rgb & 0x0000FF00) >>> 8);
+                int varB = (int) (rgb & 0x000000FF);
+                
+                if (varR > 150){
+                  varR = 0;  
+                }else{
+                  varR = 255 - (int) ((rgb & 0x00FF0000) >>> 16);
+                }
+                
+                 if (varG > 150){
+                  varG = 0;  
+                }else{
+                  varG = 255 - (int) ((rgb & 0x00FF0000) >>> 16);
+                }
+                 
+                  if (varB > 150){
+                  varB = 0;  
+                }else{
+                  varB = 255 - (int) ((rgb & 0x00FF0000) >>> 16);
+                }
 
+                Color color = new Color(varR, varG, varB);
+                image.setRGB(i, j, color.getRGB());
+            }
+        }
+        return image;
+    }// final metodo 19 - BufferedImage novidade
+    
+    
+    /**
+     * Metodo 20 Metodo para aplicação do filtro chromakey1
+     *
+     * @param image
+     * @param fundo
+     * @return BufferedImage chromakey
+     */
+    public static BufferedImage chromakey1(BufferedImage image, BufferedImage fundo) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        Color color, color_image, color_fundo;
+       
+        //alterar atributos da imagem de fundo para as mesmas dimensões de "image"
+        //fundo = alterarDimensoes(fundo, width, height);
+        //ImageIcon img = new ImageIcon (Form.class.getClassLoader().getResource("D://images//teste.png"));
+        //fundo.setImage(fundo.getImage().getScaledInstance(width, height, 100));
+        /*
+        ImageIcon img = new ImageIcon (Form.class.getClassLoader().getResource("Imagens/botões/controle/btoExcluir.png"));
+        img.setImage(img.getImage().getScaledInstance(50, 50, 100));
+        */
+        
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                int f_rgb = fundo.getRGB(i, j);//a cor inversa é dado por 255 menos o valor da cor
+                int rgb = image.getRGB(i, j);//a cor inversa é dado por 255 menos o valor da cor                 
+                
+                int varR = (int) ((rgb & 0x00FF0000) >>> 16);
+                int varG = (int) ((rgb & 0x0000FF00) >>> 8);
+                int varB = (int) (rgb & 0x000000FF);
+                
+                int varfR = (int) ((f_rgb & 0x00FF0000) >>> 16);
+                int varfG = (int) ((f_rgb & 0x0000FF00) >>> 8);
+                int varfB = (int) (f_rgb & 0x000000FF);
+                
+                color_image = new Color(varR, varG, varB);
+                color_fundo = new Color(varfR, varfG, varfB);
+                
+                 /*
+                if (!Especial.BasicImageUtils.isSkin3(color_image)){
+                    color = new Color(varfR, varfG, varfB);
+                } else{
+                    color = new Color(varR, varG, varB);
+                }
+                    
+               
+                if (varR > 150){
+                  varR = 0;  
+                }else{
+                  varR = 255 - (int) ((f_rgb & 0x00FF0000) >>> 16);
+                }
+                
+                 if (varG > 150){
+                  varG = 0;  
+                }else{
+                  varG = 255 - (int) ((f_rgb & 0x00FF0000) >>> 16);
+                }
+                 
+                
+                
+                if (varB > 150){
+                  varB = 0;  
+                }else{
+                  varB = 255 - (int) ((rgb & 0x00FF0000) >>> 16);
+                }
+
+                */
+                
+                if (varfG < 135 && varfR < 135 && varfB < 135){
+                    //color = new Color(varR, varG, varB);
+                    image.setRGB(i, j, color_image.getRGB());
+                }
+                else{
+                    //color = new Color(varfR, varfG, varfB);
+                    image.setRGB(i, j, color_fundo.getRGB());
+                }
+               
+                
+                //System.out.println(color_image.toString());
+                 
+            } // final do for j
+            
+        } // final do for i
+        //image.flush();
+        return image;
+    }// final metodo 20 - BufferedImage chromakey1
+
+    /**
+     * Metodo 21 Metodo para aplicação do filtro chromakey1
+     *
+     * @param image
+     * @param fundo
+     * @return BufferedImage chromakey
+     */
+    public static void chromakey(BufferedImage image, BufferedImage fundo) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        Color color;
+       
+        //alterar atributos da imagem de fundo para as mesmas dimensões de "image"
+        //fundo = alterarDimensoes(fundo, width, height);
+        //ImageIcon img = new ImageIcon (Form.class.getClassLoader().getResource("D://images//teste.png"));
+        //fundo.setImage(fundo.getImage().getScaledInstance(width, height, 100));
+        /*
+        ImageIcon img = new ImageIcon (Form.class.getClassLoader().getResource("Imagens/botões/controle/btoExcluir.png"));
+        img.setImage(img.getImage().getScaledInstance(50, 50, 100));
+        */
+        
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                int f_rgb = fundo.getRGB(i, j);//a cor inversa é dado por 255 menos o valor da cor
+                int rgb = image.getRGB(i, j);//a cor inversa é dado por 255 menos o valor da cor                 
+                
+                int varR = (int) ((rgb & 0x00FF0000) >>> 16);
+                int varG = (int) ((rgb & 0x0000FF00) >>> 8);
+                int varB = (int) (rgb & 0x000000FF);
+                
+                int varfR = (int) ((f_rgb & 0x00FF0000) >>> 16);
+                int varfG = (int) ((f_rgb & 0x0000FF00) >>> 8);
+                int varfB = (int) (f_rgb & 0x000000FF);
+                
+                /*
+                if (varR > 150){
+                  varR = 0;  
+                }else{
+                  varR = 255 - (int) ((f_rgb & 0x00FF0000) >>> 16);
+                }
+                
+                 if (varG > 150){
+                  varG = 0;  
+                }else{
+                  varG = 255 - (int) ((f_rgb & 0x00FF0000) >>> 16);
+                }
+                 
+                
+                
+                if (varB > 150){
+                  varB = 0;  
+                }else{
+                  varB = 255 - (int) ((rgb & 0x00FF0000) >>> 16);
+                }
+
+                */
+                if (varfG < 20 && varfR < 20 && varfB < 20){
+                    color = new Color(varR, varG, varB);
+                }
+                else{
+                    color = new Color(varfR, varfG, varfB); 
+                }
+                
+                image.setRGB(i, j, color.getRGB());
+                
+            } // final do for j
+            
+        } // final do for i
+
+    }// final metodo 21 - BufferedImage chromakey
+    
+    
     /**
      * Método thresholdInv
      *
@@ -931,6 +1132,20 @@ public class FiltroSelec {
         }
         return boundingBox;
     }//final método getBoundingBox
+
+    /**
+     * Metodo para alterar dimensoes de uma imagem (BufferedImage)
+     * 
+     * @param fundo
+     * @param width
+     * @param height
+     * @return BufferedImage
+     */
+    //private static BufferedImage alterarDimensoes(BufferedImage fundo, int width, int height) {
+        //BufferedImage temp = new BufferedImage(width, height,BufferedImage.TYPE_INT_RGB);
+    //    return fundo.getScaledInstance(width, height, 100);
+        //foto.setImage(foto.getImage().getScaledInstance(widthFoto, heightFoto, 100));
+    //}//final metodo  - alterarDimensoes
 
     /**
      * Servidor imagens
@@ -1284,9 +1499,6 @@ public class FiltroSelec {
         return (pixel) & 0xFF;
     }
 
-
-    
-
     public static BufferedImage flipHorizontally(BufferedImage image) {
         BufferedImage newImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
 
@@ -1317,5 +1529,23 @@ public class FiltroSelec {
         return newImage;
     }// final metodo flipHoriz2
 
-
+    public static BufferedImage carregarImagem(String cfile) {
+        BufferedImage img = null;
+        
+        /*
+        if (img == null) {
+             return new Dimension(100,100);
+        } else {
+           return new Dimension(img.getWidth(null), img.getHeight(null));
+       }
+        */
+        
+       try {
+           img = (BufferedImage) ImageIO.read(new File(cfile));
+       } catch (IOException e) {
+           System.out.print("Erro ocorrido: "+e.toString());
+       }
+       return img;
+    }
+    
 }//Final class Filtro

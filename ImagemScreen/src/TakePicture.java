@@ -222,7 +222,7 @@ public class TakePicture extends javax.swing.JFrame {
         jSliderCam.setPaintTicks(true);
         jSliderCam.setSnapToTicks(true);
         jSliderCam.setToolTipText("Alterar a Webcam conectada e Ajusta a Tela");
-        jSliderCam.setValue(1);
+        jSliderCam.setValue(0);
         jSliderCam.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 255, 0), 3, true));
         jSliderCam.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jSliderCam.setValueIsAdjusting(true);
@@ -262,11 +262,11 @@ public class TakePicture extends javax.swing.JFrame {
         jPanelFiltro.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(25, 25, 25), 4, true));
 
         jSliderFiltro.setForeground(new java.awt.Color(240, 240, 0));
-        jSliderFiltro.setMaximum(25);
+        jSliderFiltro.setMaximum(30);
         jSliderFiltro.setPaintLabels(true);
         jSliderFiltro.setPaintTicks(true);
         jSliderFiltro.setSnapToTicks(true);
-        jSliderFiltro.setToolTipText("Alterar a Webcam conectada e Ajusta a Tela");
+        jSliderFiltro.setToolTipText("Escolher o tipo de filtro a ser aplicado");
         jSliderFiltro.setValue(0);
         jSliderFiltro.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(240, 240, 0), 3, true));
         jSliderFiltro.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -312,7 +312,7 @@ public class TakePicture extends javax.swing.JFrame {
         jSliderFiltroOpc.setPaintLabels(true);
         jSliderFiltroOpc.setPaintTicks(true);
         jSliderFiltroOpc.setSnapToTicks(true);
-        jSliderFiltroOpc.setToolTipText("Alterar a Webcam conectada e Ajusta a Tela");
+        jSliderFiltroOpc.setToolTipText("Alterar o nível do filtro");
         jSliderFiltroOpc.setValue(1);
         jSliderFiltroOpc.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 240), 3, true));
         jSliderFiltroOpc.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -494,7 +494,7 @@ public class TakePicture extends javax.swing.JFrame {
         cmdDelPicture.setEnabled(true);
 
         // FileFilter filter = new FileNameExtensionFilter("Arquivos Imagens", "png", "jpg", "gif");
-        JFileChooser jFileChooserFoto1 = new JFileChooser("C:\\Users\\Décio\\Documents\\__POO2016"); //colocar o path do projeto
+        JFileChooser jFileChooserFoto1 = new JFileChooser("D:\\images"); //colocar o path do projeto
         //jFileChooserFoto1.addChoosableFileFilter(new TextFilterOut());
         //jFileChooserFoto1.addChoosableFileFilter(filter);
 
@@ -1047,6 +1047,25 @@ public class TakePicture extends javax.swing.JFrame {
                                     System.out.println("Esta é a:" + filtroOpc);
                                     break;
                                     
+                                    case 26:
+                                    msg = "Filtro novidade ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    FLAG_FILTRO = 26; //FILTRO JAVA PURO
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+                                    
+                                    case 27:
+                                    msg = "Filtro chromakey ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    FLAG_FILTRO = 27; //FILTRO JAVA PURO
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+                                    
+                                    
                                 default:
                                     msg = msg + "Sem Filtro ";
                                     lblNumFiltro.setText(msg + jSliderFiltro.getValue());
@@ -1121,6 +1140,13 @@ public class TakePicture extends javax.swing.JFrame {
                             } else if (FLAG_FILTRO == 25) {
                                 FiltroSelec.quadricular((teste),vl);
                                 //FiltroSelec.posterizer(teste, vl);
+                            }else if (FLAG_FILTRO == 26) {
+                                teste = FiltroSelec.novidade(teste);
+                                //FiltroSelec.posterizer(teste, vl);
+                            }else if (FLAG_FILTRO == 27) {
+                                BufferedImage fundo = FiltroSelec.carregarImagem("D://images//teste2.png");
+                                teste = FiltroSelec.chromakey1(fundo, teste);
+                                //FiltroSelec.chromakey(fundo, teste);
                             }
                             
                             
