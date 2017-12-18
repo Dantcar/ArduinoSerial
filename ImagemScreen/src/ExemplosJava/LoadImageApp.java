@@ -51,7 +51,8 @@ public class LoadImageApp extends Component {
 
     public LoadImageApp() {
        try {
-           img = ImageIO.read(new File("D:Afoto18.png"));
+           img = ImageIO.read(new File("D://images//teste4.png"));
+       
        } catch (IOException e) {
        }
 
@@ -61,7 +62,7 @@ public class LoadImageApp extends Component {
         if (img == null) {
              return new Dimension(100,100);
         } else {
-           return new Dimension(img.getWidth(null)/2, img.getHeight(null)/2);
+           return new Dimension(img.getWidth(), img.getHeight());
        }
     }
 

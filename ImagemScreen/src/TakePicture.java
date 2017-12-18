@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 
+
+import Especial.EfeitosGraficos;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -32,6 +34,7 @@ import org.opencv.core.MatOfByte;
 import org.opencv.core.Scalar;
 import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
+
 
 /**
  *
@@ -1062,6 +1065,18 @@ public class TakePicture extends javax.swing.JFrame {
                                     lblNumFiltro.setText(msg + jSliderFiltro.getValue());
                                     lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
                                     FLAG_FILTRO = 27; //FILTRO JAVA PURO
+                                    
+                                    System.out.println("Esta é a:" + filtroOpc);
+                                    break;
+                                    
+                                    case 28:
+                                    //frame = PutFiltro.mainBox(frame, vl);
+                                    msg = "Filtro arte ";
+                                    msgOpcFiltro = msg;
+                                    lblNumFiltro.setText(msg + jSliderFiltro.getValue());
+                                    lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
+                                    FLAG_FILTRO = 28; //FILTRO JAVA PURO
+                                    
                                     System.out.println("Esta é a:" + filtroOpc);
                                     break;
                                     
@@ -1081,8 +1096,8 @@ public class TakePicture extends javax.swing.JFrame {
                                     new org.opencv.core.Point(frame.rows() / 12, (frame.cols() / 15 * 11)), //Posição do texto na tela
                                     Core.FONT_HERSHEY_TRIPLEX, new Double(.83), new Scalar(250));
 
-                            Highgui.imencode(".bmp", frame, mem);
-                            //Highgui.imencode(".png", frame, mem);
+                            //Highgui.imencode(".bmp", frame, mem);
+                            Highgui.imencode(".png", frame, mem);
 
                             /*
                              Parte experimentando método:
@@ -1144,9 +1159,13 @@ public class TakePicture extends javax.swing.JFrame {
                                 teste = FiltroSelec.novidade(teste);
                                 //FiltroSelec.posterizer(teste, vl);
                             }else if (FLAG_FILTRO == 27) {
-                                BufferedImage fundo = FiltroSelec.carregarImagem("D://images//teste2.png");
-                                teste = FiltroSelec.chromakey1(fundo, teste);
+                                BufferedImage fundo = FiltroSelec.carregarImagem("D://images//pixinguinha2.jpg");
+                                teste = ChromaK.FiltrosCK.chromakey1(fundo, teste);
                                 //FiltroSelec.chromakey(fundo, teste);
+                            }else if (FLAG_FILTRO == 28) {
+                              //BufferedImage fundo = EfeitosGraficos.drawSunB(50, 50, teste);                              
+                              // teste = ChromaK.FiltrosCK.chromakeyBlack(fundo, teste);
+                              teste = EfeitosGraficos.drawSunB(50, 50, teste);
                             }
                             
                             

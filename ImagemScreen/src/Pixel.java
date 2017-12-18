@@ -27,7 +27,7 @@ public class Pixel {
 
         try {
             System.out.println("Estou aqui");
-            File input = new File("d:\\AFoto17.png");
+            File input = new File("d:\\images\\AFoto17.png");
 
             image = ImageIO.read(input);
 

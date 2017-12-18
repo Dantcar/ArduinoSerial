@@ -25,7 +25,7 @@ public class CaptureFullScreen {
         try {
             Robot robot = new Robot();
             String format = "jpg";
-            String fileName = "C:\\Users\\Décio\\Documents\\__POO2016\\CapturaTela\\FulScreenShot."+format;
+            String fileName = "D:\\images\\FulScreenShot."+format;
             
             Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
             BufferedImage screenFulImage = robot.createScreenCapture(screenRect);

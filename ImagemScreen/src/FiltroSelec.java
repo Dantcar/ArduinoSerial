@@ -772,7 +772,7 @@ public class FiltroSelec {
      * @param fundo
      * @return BufferedImage chromakey
      */
-    public static BufferedImage chromakey1(BufferedImage image, BufferedImage fundo) {
+    public static BufferedImage chromakeyOld1(BufferedImage image, BufferedImage fundo) {
         int width = image.getWidth();
         int height = image.getHeight();
         Color color, color_image, color_fundo;
@@ -849,7 +849,7 @@ public class FiltroSelec {
         } // final do for i
         //image.flush();
         return image;
-    }// final metodo 20 - BufferedImage chromakey1
+    }// final metodo 20 - BufferedImage chromakeyOld1
 
     /**
      * Metodo 21 Metodo para aplicação do filtro chromakey1
@@ -858,7 +858,7 @@ public class FiltroSelec {
      * @param fundo
      * @return BufferedImage chromakey
      */
-    public static void chromakey(BufferedImage image, BufferedImage fundo) {
+    public static void chromakeyOld(BufferedImage image, BufferedImage fundo) {
         int width = image.getWidth();
         int height = image.getHeight();
         Color color;
@@ -907,7 +907,7 @@ public class FiltroSelec {
                 }
 
                 */
-                if (varfG < 20 && varfR < 20 && varfB < 20){
+                if (varfG > 170 && varfR < 20 && varfB < 20){
                     color = new Color(varR, varG, varB);
                 }
                 else{
@@ -920,7 +920,7 @@ public class FiltroSelec {
             
         } // final do for i
 
-    }// final metodo 21 - BufferedImage chromakey
+    }// final metodo 21 - BufferedImage chromakeyOld
     
     
     /**
