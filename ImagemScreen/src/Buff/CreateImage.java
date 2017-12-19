@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Creating a BufferedImage from an Image object : 
+ * BufferedImage « 2D Graphics « Java Tutorial
  */
 package Buff;
 import java.awt.Graphics;
@@ -14,7 +13,7 @@ import javax.swing.ImageIcon;
 
 public class CreateImage {
      public static void main(String[] argv) throws Exception {
-    Image  img = new ImageIcon("test.png").getImage();
+    Image  img = new ImageIcon("d:\\images\\1sol.png").getImage();
 
     BufferedImage bufferedImage = new BufferedImage(img.getWidth(null), img.getHeight(null),
     BufferedImage.TYPE_INT_RGB);
