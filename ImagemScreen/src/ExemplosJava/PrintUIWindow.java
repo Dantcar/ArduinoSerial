@@ -35,6 +35,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.print.*;
+import java.util.Calendar;
 
 public class PrintUIWindow implements Printable, ActionListener {
 
@@ -84,9 +85,12 @@ public class PrintUIWindow implements Printable, ActionListener {
            public void windowClosing(WindowEvent e) {System.exit(0);}
         });
         JTextArea text = new JTextArea(50, 20);
+
         for (int i=1;i<=50;i++) {
             text.append("Line " + i + "\n");
         }
+
+        
         JScrollPane pane = new JScrollPane(text);
         pane.setPreferredSize(new Dimension(250,200));
         f.add("Center", pane);

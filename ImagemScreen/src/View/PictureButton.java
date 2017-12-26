@@ -30,7 +30,7 @@ public class PictureButton {
     
     public static void main(String[] args){
         
-        JFrame frame = new JFrame();
+        JFrame frame = new JFrame("Picture Button");
         Icon icon = new ImageIcon("D://images//icon.png");
         JButton button = new JButton(icon);
         
