@@ -16,6 +16,7 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.logging.Level;
@@ -55,7 +56,7 @@ public class TakePicture extends javax.swing.JFrame {
     private static int DELAY_CAM = 50;
     // private static int openFrameCount = 0; //teste
     // private static final int xOffset = 30, yOffset = 30; //teste
-
+    //private Horario horario;
     int count = 0;
     //VideoCapture webSource = null;
     VideoCapture camFoto = null;
@@ -74,7 +75,12 @@ public class TakePicture extends javax.swing.JFrame {
         UIManager.put("jSliderCam.foreground", new Color(8, 32, 128));
 
         initComponents();
-
+       new Horario().start();
+        
+        Date varData = new Date();
+        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+        formatador.format( varData );
+        
         Hashtable m_labels = new Hashtable(3);
         for (int k = 0; k < 4; k++) {
             m_labels.put(k, new JLabel(
@@ -96,7 +102,7 @@ public class TakePicture extends javax.swing.JFrame {
         jSliderFiltroOpc.setMinorTickSpacing(1);
         jSliderFiltroOpc.setPaintTicks(true);
 
-        this.setTitle("Faça sua Fotografia de Cadastro");
+        this.setTitle("Faça sua Fotografia de Cadastro: ");
         String pathProjeto = System.getProperty("user.dir") + "//";
         String iconPetfast = pathProjeto + "src//Icones//petfastIcone.png";
         setIconImage(Toolkit.getDefaultToolkit().getImage(iconPetfast));
@@ -565,14 +571,20 @@ public class TakePicture extends javax.swing.JFrame {
 
     private void cmdSairTakePictureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSairTakePictureActionPerformed
         // TODO add your handling code here:
+        
         stopCamFoto();
+       
+        
         try {
             Thread.sleep(DELAY_CAM * 2);
+            Horario.done = true;
+            
         } catch (InterruptedException ex) {
             System.out.println("Erro na classe telaTakeFoto.java: " + ex);
             Logger.getLogger(TelaTakeFoto.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.dispose();
+        
     }//GEN-LAST:event_cmdSairTakePictureActionPerformed
 
     private void jSliderCamStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSliderCamStateChanged
@@ -657,6 +669,7 @@ public class TakePicture extends javax.swing.JFrame {
                 new TakePicture().setVisible(true);
             }
         });
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -785,7 +798,7 @@ public class TakePicture extends javax.swing.JFrame {
 
                 while (runnable) {
                     Filtro f = new Filtro();
-
+                    
                     String msg = "";
                     String msgOpcFiltro = "";
                     int x = 0;
@@ -1089,10 +1102,12 @@ public class TakePicture extends javax.swing.JFrame {
                                     break;
 
                             }
+                            
 
                             //Colocar legenda na tela        
                             Core.putText(frame,
-                                    msg = msg + " by DAC",
+                                    //msg = msg + " by DAC " + Horario.clock,
+                                    msg = Horario.clock,
                                     new org.opencv.core.Point(frame.rows() / 12, (frame.cols() / 15 * 11)), //Posição do texto na tela
                                     Core.FONT_HERSHEY_TRIPLEX, new Double(.83), new Scalar(250));
 

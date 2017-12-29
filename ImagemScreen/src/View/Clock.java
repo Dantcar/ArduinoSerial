@@ -32,6 +32,7 @@
  * The pioneering role of Dennis Ritchie and Bjarne Stroustrup, of AT&T, for
  * inventing predecessor languages C and C++ is also gratefully acknowledged.
  */
+package View;
 
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -41,73 +42,80 @@ import java.util.Calendar;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-/** A simple Clock */
+/**
+ * A simple Clock
+ */
 public class Clock extends javax.swing.JComponent {
-  protected DecimalFormat tflz, tf;
 
-  protected boolean done = false;
+    protected DecimalFormat tflz, tf;
+    protected String clock = null;
+    protected boolean done = false;
+    public String resp = "";
+    
+    public Clock() {
+        new Thread(new Runnable() {
+            public void run() {
+                while (!done) {
+                    Clock.this.repaint(); // request a redraw
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        /* do nothing */
+                    }
+                }
+            }
+        }).start();
+        tf = new DecimalFormat("#0");
+        tflz = new DecimalFormat("00");
+    }
 
-  public Clock() {
-    new Thread(new Runnable() {
-      public void run() {
-        while (!done) {
-          Clock.this.repaint(); // request a redraw
-          try {
-            Thread.sleep(1000);
-          } catch (InterruptedException e) { /* do nothing */
-          }
-        }
-      }
-    }).start();
-    tf = new DecimalFormat("#0");
-    tflz = new DecimalFormat("00");
-  }
+    
 
-  public void stop() {
-    done = true;
-  }
+    public void stop() {
+        done = true;
+    }
 
-  /* paint() - get current time and draw (centered) in Component. */
-  public void paint(Graphics g) {
-    Calendar myCal = Calendar.getInstance();
-    StringBuffer sb = new StringBuffer();
-    sb.append(tf.format(myCal.get(Calendar.HOUR)));
-    sb.append(':');
-    sb.append(tflz.format(myCal.get(Calendar.MINUTE)));
-    sb.append(':');
-    sb.append(tflz.format(myCal.get(Calendar.SECOND)));
-    String s = sb.toString();
-    FontMetrics fm = getFontMetrics(getFont());
-    int x = (getSize().width - fm.stringWidth(s)) / 2;
-    // System.out.println("Size is " + getSize());
-    g.drawString(s, x, 10);
-  }
+    /* paint() - get current time and draw (centered) in Component. */
+    public void paint(Graphics g) {
+        Calendar myCal = Calendar.getInstance();
+        StringBuffer sb = new StringBuffer();
+        sb.append(tf.format(myCal.get(Calendar.HOUR)));
+        sb.append(':');
+        sb.append(tflz.format(myCal.get(Calendar.MINUTE)));
+        sb.append(':');
+        sb.append(tflz.format(myCal.get(Calendar.SECOND)));
+        String s = sb.toString();
+        FontMetrics fm = getFontMetrics(getFont());
+        int x = (getSize().width - fm.stringWidth(s)) / 2;
+        // System.out.println("Size is " + getSize());
+        g.drawString(s, x, 10);
+    }
 
-  public Dimension getPreferredSize() {
-    return new Dimension(100, 30);
-  }
+    public Dimension getPreferredSize() {
+        return new Dimension(100, 30);
+    }
 
-  public Dimension getMinimumSize() {
-    return new Dimension(50, 10);
-  }
-  
-  private static void createAndShowGUI() {
-    JFrame f = new JFrame("Clock");
-    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    f.setSize(250, 150);
-    Clock component = new Clock();
-    f.add(component);
-    f.setVisible(true);
-  }
-  
-  public static void main(String[] args){
-      //Clock clock = new Clock();
-      Runnable doCreateAndShowGUI = new Runnable() {
-      public void run() {
-        createAndShowGUI();
-      }
-    };
-    SwingUtilities.invokeLater(doCreateAndShowGUI);
-      
-  }//final main
+    public Dimension getMinimumSize() {
+        return new Dimension(50, 10);
+    }
+
+    private static void createAndShowGUI() {
+        JFrame f = new JFrame("Clock");
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setSize(250, 150);
+        Clock component = new Clock();
+        f.add(component);
+        f.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        //Clock clock = new Clock();
+        Runnable doCreateAndShowGUI = new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
+        };
+        SwingUtilities.invokeLater(doCreateAndShowGUI);
+
+    }//final main
 }//final classe Clock
