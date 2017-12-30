@@ -75,8 +75,11 @@ public class TakePicture extends javax.swing.JFrame {
         UIManager.put("jSliderCam.foreground", new Color(8, 32, 128));
 
         initComponents();
+       
+       /* iniciando Threads de horario e data para impressao na tela */
        new Horario().start();
-        
+       new Datat().start();
+       
         Date varData = new Date();
         SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
         formatador.format( varData );
@@ -577,7 +580,10 @@ public class TakePicture extends javax.swing.JFrame {
         
         try {
             Thread.sleep(DELAY_CAM * 2);
+            
+            /* Encerrando Threads Horario e Datat */
             Horario.done = true;
+            Datat.done = true;
             
         } catch (InterruptedException ex) {
             System.out.println("Erro na classe telaTakeFoto.java: " + ex);
@@ -1093,26 +1099,30 @@ public class TakePicture extends javax.swing.JFrame {
                                     System.out.println("Esta é a:" + filtroOpc);
                                     break;
                                     
-                                    
                                 default:
                                     msg = msg + "Sem Filtro ";
                                     lblNumFiltro.setText(msg + jSliderFiltro.getValue());
                                     lblNumFiltroOpc.setText(jSliderFiltroOpc.getValue() + " " + msgOpcFiltro);
                                     System.out.println("Esta é a:" + filtroOpc);
                                     break;
-
                             }
                             
-
                             //Colocar legenda na tela        
                             Core.putText(frame,
                                     //msg = msg + " by DAC " + Horario.clock,
-                                    msg = Horario.clock,
+                                    msg = "Data: " + Datat.dateNow +" Hora: "  + Horario.clock ,
                                     new org.opencv.core.Point(frame.rows() / 12, (frame.cols() / 15 * 11)), //Posição do texto na tela
-                                    Core.FONT_HERSHEY_TRIPLEX, new Double(.83), new Scalar(250));
-
+                                    Core.FONT_HERSHEY_SCRIPT_SIMPLEX, new Double(.83), new Scalar(250));
+                                    //Core.FONT_HERSHEY_PLAIN, new Double(.83), new Scalar(250));
+                                    //Core.FONT_ITALIC, new Double(.83), new Scalar(250));
+                                    //Core.FONT_HERSHEY_DUPLEX, new Double(.83), new Scalar(250));
+                                    //Core.FONT_HERSHEY_TRIPLEX, new Double(.83), new Scalar(250));
+                                    //Core.FONT_HERSHEY_COMPLEX, new Double(.83), new Scalar(250));
+                            
                             //Highgui.imencode(".bmp", frame, mem);
-                            Highgui.imencode(".png", frame, mem);
+                            //Highgui.imencode(".png", frame, mem);
+                            //Highgui.imencode();
+                            //Highgui.imdecode(frame, vl);
 
                             /*
                              Parte experimentando método:
@@ -1182,8 +1192,6 @@ public class TakePicture extends javax.swing.JFrame {
                               // teste = ChromaK.FiltrosCK.chromakeyBlack(fundo, teste);
                               teste = EfeitosGraficos.drawSunB(50, 50, teste);
                             }
-                            
-                            
                             
                             //
                             Graphics gCam1 = lblFotoTake.getGraphics();
