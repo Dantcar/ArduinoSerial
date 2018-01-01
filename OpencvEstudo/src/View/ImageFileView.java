@@ -39,11 +39,19 @@ import javax.swing.filechooser.*;
 
 /* ImageFileView.java is used by FileChooserDemo2.java. */
 public class ImageFileView extends FileView {
-    ImageIcon jpgIcon = Utils.createImageIcon("images/jpgIcon.gif");
-    ImageIcon gifIcon = Utils.createImageIcon("images/gifIcon.gif");
-    ImageIcon tiffIcon = Utils.createImageIcon("images/tiffIcon.gif");
-    ImageIcon pngIcon = Utils.createImageIcon("images/pngIcon.png");
+    //criar no projeto a pasta images e adicionar as figuras para 
+    //representar os arquivos abaixo.
+    
+    /*
+        ImageIcon jpgIcon = Utils.createImageIcon("images/jpgIcon.jpeg");
+    ImageIcon gifIcon = Utils.createImageIcon("images/gifIcon.jpeg");
+    ImageIcon tiffIcon = Utils.createImageIcon("images/tiffIcon.jpeg");
+    ImageIcon pngIcon = Utils.createImageIcon("images/pngIcon.jpeg");
+   
+    */
 
+    
+    
     public String getName(File f) {
         return null; //let the L&F FileView figure this out
     }
@@ -83,14 +91,14 @@ public class ImageFileView extends FileView {
         if (extension != null) {
             if (extension.equals(Utils.jpeg) ||
                 extension.equals(Utils.jpg)) {
-                icon = jpgIcon;
+                //icon = jpgIcon;
             } else if (extension.equals(Utils.gif)) {
-                icon = gifIcon;
+                //icon = gifIcon;
             } else if (extension.equals(Utils.tiff) ||
                        extension.equals(Utils.tif)) {
-                icon = tiffIcon;
+                //icon = tiffIcon;
             } else if (extension.equals(Utils.png)) {
-                icon = pngIcon;
+                //icon = pngIcon;
             }
         }
         return icon;

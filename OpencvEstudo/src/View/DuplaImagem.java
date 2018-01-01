@@ -1,6 +1,6 @@
 /**
- * Praia Grande 30-12-2017
- * Class SplitPanelForm.java
+ * Praia Grande 31-12-2017
+ * Class DuplaImagem.java
  * LearnigJava - cap.17
  * OpenCV estudo
  * To hold: uses two JLabels containing ImageIcons.
@@ -16,9 +16,13 @@
  */
 package View;
 
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Rectangle;
+import java.awt.Robot;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -37,17 +41,19 @@ import javax.swing.JSplitPane;
 import javax.swing.border.LineBorder;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
-
-//import javax.swing.filechooser.FileFilter;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author decio_000
  */
-public class SplitPanelForm /*implements ActionListener, MouseListener, MouseMotionListener */{
-
-    private JButton buttonLeft, buttonRight, buttonEnd, buttonExtra;
+public class DuplaImagem {
     
+    private JButton buttonLeft, buttonRight, buttonEnd, buttonExtra;
     
     private JFileChooser fileChooser;
 
@@ -55,12 +61,26 @@ public class SplitPanelForm /*implements ActionListener, MouseListener, MouseMot
 
     private String fileOne = "D:\\images\\teste4.png";
     private String fileTwo = "D:\\images\\novidade.png";
-    
-    private Toolkit toolkit;
 
-    public SplitPanelForm() {
+    public DuplaImagem(JButton buttonLeft, JButton buttonRight, 
+            JButton buttonEnd, JButton buttonExtra, 
+            JFileChooser fileChooser, JLabel leftImage, 
+            JLabel rightImage) {
         
-        //metodo para carregar interface e seus componentes
+        this.buttonLeft = buttonLeft;
+        this.buttonRight = buttonRight;
+        this.buttonEnd = buttonEnd;
+        this.buttonExtra = buttonExtra;
+        this.fileChooser = fileChooser;
+        this.leftImage = leftImage;
+        this.rightImage = rightImage;
+    }
+
+    /**
+     * 
+     */
+    public DuplaImagem() {
+         //metodo para carregar interface e seus componentes
         initComponentes();
 
         //metodo para colocar acao aos botoes
@@ -68,8 +88,7 @@ public class SplitPanelForm /*implements ActionListener, MouseListener, MouseMot
         
         //metodo para colocar acao aos Labels das imagens esquerda e direita.
         initActionLabels();
-
-    }//metodo construtor
+    }//final metodo construtor DuplaImagem
 
     /**
      * Utilizaçao uso geral
@@ -78,38 +97,13 @@ public class SplitPanelForm /*implements ActionListener, MouseListener, MouseMot
      * @return 
      */
     private String arqVideo() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        
-        /**
-        // FileFilter filter = new FileNameExtensionFilter("Arquivos Imagens", "png", "jpg", "gif");
-        JFileChooser jFileChooserFoto1 = new JFileChooser("D:\\images"); //colocar o path do projeto
-        //jFileChooserFoto1.addChoosableFileFilter(new TextFilterOut());
-        //jFileChooserFoto1.addChoosableFileFilter(filter);
-
-         Add a custom file filter and disable the default
-        //(Accept All) file filter.
-        jFileChooserFoto1.addChoosableFileFilter(new ImageFilter());
-        jFileChooserFoto1.setAcceptAllFileFilterUsed(false);//desabilita o default do JFileChooser tipo de arquivos.
-
-        //Add custom icons for file types.
-        jFileChooserFoto1.setFileView(new ImageFileView());
-
-        //Add the preview pane.
-        jFileChooserFoto1.setAccessory(new ImagePreview(jFileChooserFoto1));
-         */
-        
-        
-        //FileFilter filtro = new TextFilter();
-        //fileChooser = new JFileChooser();
         fileChooser = new JFileChooser("D:\\images");
         //acima ou abaixo são opcoes unicas
-        //fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-        
-        //fileChooser.setFileSelectionMode(
-        //        JFileChooser.FILES_AND_DIRECTORIES);
-        //fileChooser.setFileFilter(filtro);
-        
-       fileChooser.setAcceptAllFileFilterUsed(false);//desabilita o default do JFileChooser tipo de arquivos.
+   //fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+
+       //desabilita o default do JFileChooser tipo de arquivos. 
+       fileChooser.setAcceptAllFileFilterUsed(false);
+             
        fileChooser.setFileView(new ImageFileView());
        //Add the preview pane.
         fileChooser.setAccessory(new ImagePreview(fileChooser));
@@ -119,15 +113,28 @@ public class SplitPanelForm /*implements ActionListener, MouseListener, MouseMot
         int result = fileChooser.showOpenDialog(buttonEnd);
         //se o usuario clicou no botao Cancel no dialogo, retorna
         if (result == JFileChooser.CANCEL_OPTION) {
-            System.exit(1);
+             try {
+                this.finalize();
+                //System.exit(1);
+            } catch (Throwable ex) {
+                System.out.println("Erro:" + ex);
+                Logger.getLogger(DuplaImagem.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         File fileName = fileChooser.getSelectedFile();
 
         //exibe erro se invalido
         if ((fileName == null) || (fileName.getName().equals(""))) {
-            JOptionPane.showMessageDialog(buttonEnd, "Invalido nome de arquivo", "Invalid File Name", JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
+            JOptionPane.showMessageDialog(buttonEnd, "Invalido nome de arquivo",
+                    "Invalid File Name", JOptionPane.ERROR_MESSAGE);
+            try {
+                this.finalize();
+                //System.exit(1);
+            } catch (Throwable ex) {
+                System.out.println("Erro:" + ex);
+                Logger.getLogger(DuplaImagem.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return fileName.getAbsolutePath();
@@ -138,7 +145,6 @@ public class SplitPanelForm /*implements ActionListener, MouseListener, MouseMot
      * metodo para carregar interfacegrafica e seus componentes
      */
     private void initComponentes() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         //Todas as bordas
         //Borda do painel
         Color bl = new Color(204, 23, 204);
@@ -160,18 +166,19 @@ public class SplitPanelForm /*implements ActionListener, MouseListener, MouseMot
 
         //Montagem do painel (Panel) principal
         JPanel jPanel = new javax.swing.JPanel();
-        jPanel.setLayout(new FlowLayout());
+        jPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         jPanel.setBorder(lborderP);
         jPanel.setSize(600, 300);
         
         //Montagem do painelBotoes (Panel) botoes
         JPanel jPanelBotoes = new javax.swing.JPanel();
-        jPanelBotoes.setLayout(new FlowLayout());
+        jPanelBotoes.setLayout(new FlowLayout(FlowLayout.CENTER));
         jPanelBotoes.setBorder(lborderPB);
         jPanelBotoes.setSize(300,50);
                 
         //JFrame frame principal
-        JFrame frame = new JFrame("SplitPanelForm v1.0");
+        JFrame frame = new JFrame("DuplaImagem v1.0");
+        
         frame.setSize(700, 450);
         //JButton left
         buttonLeft = new JButton();
@@ -247,13 +254,10 @@ public class SplitPanelForm /*implements ActionListener, MouseListener, MouseMot
      * 
      */
     private void initActionBotoes() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
         //Acao para o botao Left
         buttonLeft.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 System.out.println("Esquerda Avante");
 
                 fileOne = arqVideo();
@@ -261,31 +265,7 @@ public class SplitPanelForm /*implements ActionListener, MouseListener, MouseMot
                 System.out.println(fileOne);
                 leftImage.setIcon(new ImageIcon(fileOne));
                 loadTooltip();
-                /*modelo para utilizar o fileChooser */
-                /*
-                fileChooser = new JFileChooser();
-                fileChooser.setFileSelectionMode(
-                JFileChooser.FILES_AND_DIRECTORIES);
-                
-                int result = fileChooser.showOpenDialog(buttonEnd);
-                //se o usuario clicou no botao Cancel no dialogo, retorna
-                if(result == JFileChooser.CANCEL_OPTION){
-                    System.exit(1);
-                }
-                
-                File fileName = fileChooser.getSelectedFile();
-                
-                //exibe erro se invalido
-                if( ( fileName == null) || (fileName.getName().equals(""))){
-                    JOptionPane.showMessageDialog(buttonEnd, "Invalido nome de arquivo", "Invalid File Name", JOptionPane.ERROR_MESSAGE);
-                    System.exit(1);
-                }
-                
-                
-                fileOne = fileName.getAbsolutePath();
-                System.out.println(fileOne);
-                leftImage.setIcon(new ImageIcon(fileOne));
-                 */
+
             }
 
         });
@@ -294,7 +274,6 @@ public class SplitPanelForm /*implements ActionListener, MouseListener, MouseMot
         buttonRight.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 System.out.println("Direita Abaixo");
 
                 fileTwo = arqVideo();
@@ -310,7 +289,6 @@ public class SplitPanelForm /*implements ActionListener, MouseListener, MouseMot
         buttonEnd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 System.out.println("Saindo....");
                 System.exit(0);
             }
@@ -321,7 +299,10 @@ public class SplitPanelForm /*implements ActionListener, MouseListener, MouseMot
         buttonExtra.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            
+                BufferedImage image = GetScreenImage();
+                String path = "ScreenShot.png";
+                File name = new File( path );
+                rightImage.setIcon(new ImageIcon(fileTwo));
                 
             }
 
@@ -344,7 +325,7 @@ public class SplitPanelForm /*implements ActionListener, MouseListener, MouseMot
         * Metodo para capturar mouse clicado na imagem da esquerda
         */
         leftImage.addMouseListener(new MouseAdapter(){
-            public void mousePressed(MouseEvent e){
+            public void mouseClicked(MouseEvent e){
                 System.out.println("Mouse clicado na figura esquerda");
             }
         });
@@ -364,7 +345,6 @@ public class SplitPanelForm /*implements ActionListener, MouseListener, MouseMot
      * Metodo Acessivel para acrescentar a descricao do nome e tipo de foto
      */
     private void loadTooltip() {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         leftImage.setToolTipText("Imagems Carregada: " + fileOne);
         rightImage.setToolTipText("Imagems Carregada: " + fileTwo);
     }
@@ -374,51 +354,102 @@ public class SplitPanelForm /*implements ActionListener, MouseListener, MouseMot
      * @param args
      */
     public static void main(String[] args) {
-        SplitPanelForm form = new SplitPanelForm();
+        DuplaImagem form = new DuplaImagem();
 
     }//final main
 
     /*
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); 
+    //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); 
+    //To change body of generated methods, choose Tools | Templates.
         System.out.println("clickeid");
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); 
+    //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); 
+        //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); 
+        //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); 
+        //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); 
+        //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); 
+        //To change body of generated methods, choose Tools | Templates.
     }
 */
-
-}//final Classe SplitPaneForm
+    /**
+     * 
+     * @return
+     * @throws AWTException
+     * @throws IOException 
+     */
+     public BufferedImage GetScreenImage() {
+        Robot robot = null;
+        try {
+            robot = new Robot();
+        } catch (AWTException ex) {
+            Logger.getLogger(DuplaImagem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Dimension d = new Dimension();
+        d.height = 10;
+        d.width = 10;
+        BufferedImage screenShot = robot.createScreenCapture(new Rectangle(d));
+        BufferedImage bgrScreenshot = new BufferedImage(screenShot.getWidth(),
+                screenShot.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+        boolean done = bgrScreenshot.getGraphics().drawImage(screenShot, 0, 0, null);
+        
+        return bgrScreenshot;
+    }//final metodo GetCurrentScreenImage
+    
+    /**
+     * 
+     * @return
+     * @throws AWTException
+     * @throws IOException 
+     */
+     public static byte[] GetCurrentScreenImage() throws AWTException,
+            IOException {
+        Robot robot = new Robot();
+        Dimension d = new Dimension();
+        d.height = 10;
+        d.width = 10;
+        BufferedImage screenShot = robot.createScreenCapture(new Rectangle(d));
+        BufferedImage bgrScreenshot = new BufferedImage(screenShot.getWidth(),
+                screenShot.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+        boolean done = bgrScreenshot.getGraphics().drawImage(screenShot, 0, 0, null);
+        return ((DataBufferByte) bgrScreenshot.getRaster().getDataBuffer())
+                .getData();
+    }//final metodo GetCurrentScreenImage
+    
+}//final Classe DuplaImagem
