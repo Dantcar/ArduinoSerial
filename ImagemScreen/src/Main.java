@@ -29,14 +29,14 @@ public class Main {
 
             System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-            Mat source = Highgui.imread("d:\\grayscale.jpg",
+            Mat source = Highgui.imread("d:\\images\\contraste.jpg",
                     Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 
             Mat destination = new Mat(source.rows(), source.cols(), source.type());
 
             Imgproc.equalizeHist(source, destination);
             
-            Highgui.imwrite("D:\\contraste.jpg", destination);
+            Highgui.imwrite("D:\\images\\_contraste.jpg", destination);
 
         }catch (Exception e){
             System.out.println("Exception: "+ e.getMessage());
