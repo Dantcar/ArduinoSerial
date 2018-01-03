@@ -21,6 +21,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.ActionEvent;
@@ -44,8 +45,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTextPane;
 
 /**
  *
@@ -57,7 +60,7 @@ public class DuplaImagem {
     
     private JFileChooser fileChooser;
 
-    private JLabel leftImage, rightImage;
+    private JLabel leftImage, rightImage, relogio;
 
     private String fileOne = "D:\\images\\teste4.png";
     private String fileTwo = "D:\\images\\novidade.png";
@@ -172,10 +175,22 @@ public class DuplaImagem {
         
         //Montagem do painelBotoes (Panel) botoes
         JPanel jPanelBotoes = new javax.swing.JPanel();
-        jPanelBotoes.setLayout(new FlowLayout(FlowLayout.CENTER));
+        jPanelBotoes.setLayout(new FlowLayout(FlowLayout.RIGHT));
         jPanelBotoes.setBorder(lborderPB);
         jPanelBotoes.setSize(300,50);
-                
+        
+        //Montagem do painelRelogio (Panel) botoes
+        JPanel jPanelClock = new javax.swing.JPanel();
+        jPanelClock.setLayout(new FlowLayout(FlowLayout.LEFT));
+        //jPanelClock.setBorder(lborderPB);
+        jPanelClock.setSize(320,320);
+        ClockVerde clock = new ClockVerde();
+        CalendarioMes cp = new CalendarioMes();
+        jPanelClock.add(clock);
+        //JPanelClock.add(cp);
+ 
+
+
         //JFrame frame principal
         JFrame frame = new JFrame("DuplaImagem v1.0");
         
@@ -232,8 +247,12 @@ public class DuplaImagem {
         jPanelBotoes.add(buttonExtra);
         jPanelBotoes.add(buttonEnd);
         //Adicionando o jPanelBotoes ao painel principal (jPanel)
+        jPanel.add(jPanelClock);
         jPanel.add(jPanelBotoes);
+        //JPanel.add(paneTxt);
+        
         jPanel.add(split);
+        
         
         //Adicionando o jPanel ao frame principal
         frame.getContentPane().add(jPanel);
