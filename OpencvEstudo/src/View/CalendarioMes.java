@@ -23,7 +23,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 /**
  *
@@ -55,7 +54,7 @@ public class CalendarioMes extends JComponent {
     Calendar c = Calendar.getInstance();
 
     BufferedImage calendario = printxt(c.get(Calendar.MONTH), c.get(Calendar.YEAR));
-
+    BufferedImage calendario2 = Filtro.negativo(calendario);
     //BufferedImage calendario = printxt(4, 2018);
     /**
      * Compute which days to put where, in the Cal panel
@@ -153,6 +152,7 @@ public class CalendarioMes extends JComponent {
 
     /**
      * For testing, a main program
+     * @param av
      */
     public static void main(String[] av) {
         CalendarioMes cp = new CalendarioMes();
