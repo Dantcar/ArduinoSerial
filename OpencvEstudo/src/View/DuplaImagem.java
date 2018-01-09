@@ -21,14 +21,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.io.File;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -40,15 +37,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.border.LineBorder;
-import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JTextPane;
 
 /**
  *
@@ -184,7 +178,7 @@ public class DuplaImagem {
         jPanelClock.setLayout(new FlowLayout(FlowLayout.LEFT));
         //jPanelClock.setBorder(lborderPB);
         jPanelClock.setSize(320,320);
-        ClockVerde clock = new ClockVerde();
+        ClockRomano clock = new ClockRomano();
         CalendarioMes cp = new CalendarioMes();
         jPanelClock.add(clock);
         //JPanelClock.add(cp);

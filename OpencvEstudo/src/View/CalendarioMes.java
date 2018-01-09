@@ -52,8 +52,9 @@ public class CalendarioMes extends JComponent {
         30, 31, 30, 31 /* sep oct nov dec */};
 
     Calendar c = Calendar.getInstance();
-
-    BufferedImage calendario = printxt(c.get(Calendar.MONTH), c.get(Calendar.YEAR));
+    
+    BufferedImage calendario = printxt(6, 1963);
+    //BufferedImage calendario = printxt(c.get(Calendar.MONTH), c.get(Calendar.YEAR));
     BufferedImage calendario2 = Filtro.negativo(calendario);
     //BufferedImage calendario = printxt(4, 2018);
     /**

@@ -1,12 +1,12 @@
 /**
- * Praia Grande 01-01-2018 - Segunda-Feira.
- * Class Clock.java
- * Relogio analogico
+ * Praia Grande 08-01-2018 - Segunda-Feira.
+ * Class ClockRomano.java
+ * Relogio analogico com algarismos em Números Romanos.
  * 
  *
  * @author Decio A Carvalho
  * @serial 0.2
- * @since Dezembro-2017
+ * @since Janeiro - 2018
  *
  * Retomada dos Estudos com manipulacao de imagens utilizando:
  * Java.awt.Graphcs2d, Java.awt.Graphics, Java.awt.image, Java.awt.Color,
@@ -31,9 +31,10 @@ import javax.swing.JFrame;
  *
  * @author decio_000
  */
-public final class ClockVerde extends JComponent {
- private static final double TWO_PI = 2.0 * Math.PI;
+public class ClockRomano extends JComponent {
+    private static final double TWO_PI = 2.0 * Math.PI;
     private static final int UPDATE_INTERVAL = 100; //Millisecs
+    private static final int LAG = 3;
     
     private final Calendar _now =  Calendar.getInstance(); //Current time.
     
@@ -49,24 +50,24 @@ public final class ClockVerde extends JComponent {
     
     private final Color corMinuto;
     private final Color corHora;
-
-    // Draw the clock face. Probably into a buffer.
-    String strNum[] ={"12",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11"};
     
-    public ClockVerde() {
-        
-        this.setPreferredSize(new Dimension(120,120));
+    // Draw the clock face. Probably into a buffer.
+    String strNum[] ={"XII",
+            " I",
+            "II",
+            "III",
+            "IV",
+            " V",
+            "VI",
+            "VII",
+            "VIII",
+            "IX",
+            " X",
+            "XI"};
+
+
+    public ClockRomano() {
+         this.setPreferredSize(new Dimension(125,125));
         
         corFundo = new Color(230,230,230);
         corTick = new Color(0,0,0);
@@ -79,9 +80,9 @@ public final class ClockVerde extends JComponent {
             repaint();
         });
         start();
-    }// final metodo construtor.
+    }
     
-    /**
+     /**
      * Metodo start
      */
     public void start(){
@@ -113,12 +114,12 @@ public final class ClockVerde extends JComponent {
                 RenderingHints.VALUE_ANTIALIAS_ON);
         
         //The panel may have been resized, get current dimensions
-        int w = getWidth();
-        int h = getHeight();
+        int w = (getWidth());
+        int h = (getHeight());
         
-        _diameter = (( w < h) ? (w) : (h));
-        _centerX = _diameter / 2;
-        _centerY = _diameter /2;
+        _diameter = (( w < h) ? (w-7) : (h-7));
+        _centerX = (_diameter / 2)+ LAG;
+        _centerY = (_diameter /2) + LAG;
         
         //Create the clock face background image if this is the first time,
         // or if the size of the panel has changed
@@ -143,19 +144,18 @@ public final class ClockVerde extends JComponent {
         drawClockHands(g2);
         
     }// final metodo paintComponent.
-
+    
     /**
      *  Metodo que desenha a face do relogio.
      * @param g2
      */
     private void drawClockFace(Graphics2D g2a) {
         
-        
         g2a.setColor( corFundo );
-        g2a.fillOval(0, 0, _diameter, _diameter);
+        g2a.fillOval(LAG, LAG, _diameter, _diameter);
         
         g2a.setColor(Color.BLACK);
-        g2a.drawOval(0, 0, _diameter, _diameter);
+        g2a.drawOval(LAG, LAG, _diameter, _diameter);
         
         int radius = _diameter / 2;
         
@@ -167,7 +167,8 @@ public final class ClockVerde extends JComponent {
             int hc;
             if (sec%5 == 0){
                 hc = sec/5;
-                numberStart = radius - 13;
+                numberStart = radius;
+                numberStart = numberStart-13;
                 if(sec%15 == 0){
                     String strNumxx = strNum[hc];
                     
@@ -272,6 +273,9 @@ public final class ClockVerde extends JComponent {
         int dxmin = _centerX + (int) (minRadius * sine);
         int dymin = _centerY + (int) (minRadius * cosine);
         
+        int dxmax = _centerX + (int) (maxRadius * sine);
+        int dymax = _centerY + (int) (maxRadius * cosine);
+        
         g2.setFont(new Font("Arial", Font.BOLD, 10));
         g2.drawString(numStr, dxmin-4, dymin+4);
     }//final metodo drawNumber.
@@ -279,11 +283,11 @@ public final class ClockVerde extends JComponent {
     public static void main(String [] args){
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setTitle("Relogio Analogico ");
-        window.setContentPane(new ClockVerde());
+        window.setTitle("Relogio Analogico Romano");
+        window.setContentPane(new ClockRomano());
         window.pack(); //Layout components
         window.setLocationRelativeTo(null); //Center window.
         window.setVisible(true);
     }
     
-}//final Classe Clock
+}//final class ClockRomano
